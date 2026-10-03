@@ -391,6 +391,144 @@ body{position:relative}
 #dlg{position:fixed;inset:0;z-index:2000;background:rgba(0,0,0,.55);display:flex;align-items:center;justify-content:center}
 #dlg .box{background:var(--bar);color:var(--fg);border:1px solid var(--bd);border-radius:10px;padding:18px 20px;max-width:360px;box-shadow:0 8px 30px rgba(0,0,0,.4)}
 #dlg .row{display:flex;gap:8px;justify-content:flex-end;margin-top:14px}
+/* V87: page list (docked on wide screens, drawer on narrow) */
+#pgSide{position:fixed;left:0;top:calc(66px + env(safe-area-inset-top,0px));bottom:0;width:120px;z-index:45;background:var(--bar);color:var(--fg);border-right:1px solid var(--bd);overflow-y:auto;padding:6px;display:none;flex-direction:column;gap:2px;touch-action:pan-y;box-sizing:border-box}
+body.pgSideOn #pgSide{display:flex}
+#pgSide .pgh{font-size:11px;font-weight:600;letter-spacing:.5px;text-transform:uppercase;color:var(--tb-mut);padding:4px 8px}
+#pgSide button{background:none;color:var(--fg);border:0;border-radius:8px;text-align:left;padding:9px 10px;flex:none}
+#pgSide button:hover{background:var(--tb-hov)}
+#pgSide button.on{background:var(--ac);color:#fff;font-weight:600}
+#pgSide .pgadd{margin-top:4px;border:1px dashed var(--bd);text-align:center}
+#pgBack{display:none;position:fixed;inset:0;z-index:65;background:rgba(0,0,0,.4)}
+@media(min-width:900px){ body.pgSideOn #wrap{margin-left:120px} }
+@media(max-width:899px){ #pgSide{top:0;width:min(220px,72vw);z-index:70;padding-top:calc(10px + env(safe-area-inset-top,0px));box-shadow:6px 0 30px rgba(0,0,0,.4)} body.pgSideOn #pgBack{display:block} }
+/* Library: expandable section list on a card */
+#home .card .exp{position:absolute;right:6px;top:78px;padding:2px 9px;transition:transform .15s}
+#home .card .bd{padding-right:44px}
+#home .card.open .exp{transform:rotate(180deg)}
+#home .card .secs{display:none;border-top:1px solid var(--bd);padding:4px}
+#home .card.open .secs{display:block}
+#home .card .sr{display:flex;align-items:center;gap:8px;padding:8px;border-radius:6px;cursor:pointer}
+#home .card .sr:hover{background:var(--tb-hov)}
+#home .card .sr i{width:9px;height:9px;border-radius:50%;flex:none}
+#home .card .sr span{flex:1;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+/* V88: notification bell + info popup */
+#home .bell{position:relative;padding:6px 10px}
+#home .bell svg{width:18px;height:18px;stroke:currentColor;fill:none;stroke-width:2;stroke-linecap:round;stroke-linejoin:round;display:block}
+#home .bell .dot{position:absolute;top:3px;right:4px;width:9px;height:9px;border-radius:50%;background:#dc2626;border:2px solid var(--bar)}
+#dlg .ifo p{margin:10px 0 0;line-height:1.45}
+#dlg .ifo select{margin-left:6px;background:var(--bg);color:var(--fg);border:1px solid var(--bd);border-radius:6px;padding:4px 6px}
+#dlg .ifo .sbar{height:8px;border-radius:4px;background:var(--bd);overflow:hidden;margin:8px 0 2px}
+#dlg .ifo .sbar i{display:block;height:100%;background:var(--ac)}
+#dlg .ifo .sbar.warn i{background:#d97706}#dlg .ifo .sbar.crit i{background:#dc2626}
+/* V88: backup */
+#home .bk{display:inline-block;font-size:11px;font-weight:600;padding:1px 7px;border-radius:999px;margin-top:4px;color:#fff}
+#home .bk.red{background:#dc2626}#home .bk.amber{background:#d97706}#home .bk.green{background:#16a34a}
+/* V88: storage */
+#home .sbar.warn i{background:#d97706}
+#home .sbar.crit i{background:#dc2626}
+#home .swarn{color:#d97706;font-weight:600}
+#home .scrit{color:#dc2626;font-weight:600}
+#home .srow{display:flex;gap:8px;align-items:center;flex-wrap:wrap;margin-top:6px}
+#home select{background:var(--bar);color:var(--fg);border:1px solid var(--bd);border-radius:6px;padding:3px 6px}
+/* V87: section tabs + Home */
+#tabs{display:none!important}   /* the toolbar overlay covers it; notebooks/sections now live in the toolbar popup (#libPop) */
+#libPop{position:fixed;inset:0;z-index:1600;background:rgba(0,0,0,.45);display:flex;align-items:center;justify-content:center;padding:16px}
+#libPop[hidden]{display:none}
+#libPop .lpc{background:var(--bar);color:var(--fg);border:1px solid var(--bd);border-radius:14px;width:min(380px,100%);max-height:80vh;overflow:auto;padding:14px;box-shadow:0 12px 40px rgba(0,0,0,.45)}
+#libPop h3{margin:0 0 6px;font-size:13px;color:var(--tb-mut);text-transform:uppercase;letter-spacing:.5px;display:flex;align-items:center}
+#libPop h3 button{margin-left:auto;text-transform:none}
+#libPop .lpr{display:flex;align-items:center;gap:10px;padding:9px 10px;border-radius:8px;cursor:pointer}
+#libPop .lpr:hover{background:var(--tb-hov)}
+#libPop .lpr.on{background:var(--tb-hov);font-weight:600}
+#libPop .lpr i{width:10px;height:10px;border-radius:50%;flex:none}
+#libPop .lpr span{flex:1;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+#libPop .lpr small{color:var(--tb-mut)}
+#libPop .lpr button{padding:0 8px}
+#libPop hr{border:0;border-top:1px solid var(--bd);margin:10px 0}
+#libPop .lpb{width:100%;padding:10px;margin-top:6px}
+#tabs{display:flex;align-items:flex-end;gap:2px;overflow-x:auto;scrollbar-width:none;background:var(--bar);border-bottom:1px solid var(--bd);padding:4px max(8px,env(safe-area-inset-left,0px)) 0;min-height:34px}
+#tabs button{background:none;color:var(--fg);border:0;border-bottom:3px solid transparent;border-radius:6px 6px 0 0;padding:6px 12px;white-space:nowrap;flex:none}
+#tabs button:hover{background:var(--tb-hov)}
+#tabs button.sec.on{background:var(--bg);font-weight:600}
+#tabs .nbn{flex:none;padding:6px 10px;color:var(--tb-mut);font-weight:600;max-width:160px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+#tmenu{position:fixed;z-index:1800;background:var(--bar);color:var(--fg);border:1px solid var(--bd);border-radius:8px;padding:4px;box-shadow:0 8px 30px rgba(0,0,0,.35);display:flex;flex-direction:column;min-width:150px}
+#tmenu button{background:none;color:var(--fg);border:0;text-align:left;padding:8px 10px}
+#tmenu button:hover{background:var(--tb-hov)}
+#home{position:fixed;inset:0;z-index:1500;background:var(--bg);color:var(--fg);overflow:auto;padding:calc(16px + env(safe-area-inset-top,0px)) 16px 24px}
+#home[hidden]{display:none}
+#home .hh{display:flex;gap:8px;align-items:center;flex-wrap:wrap;margin-bottom:12px}
+#home .hh h1{font-size:20px;margin:0;flex:1}
+#home .sbar{height:8px;border-radius:4px;background:var(--bd);overflow:hidden;margin:4px 0 2px}
+#home .sbar i{display:block;height:100%;background:var(--ac)}
+#home .grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(210px,1fr));gap:16px;margin-top:18px;align-items:start}
+#home .card{background:var(--bar);border:1px solid var(--bd);border-radius:10px;overflow:hidden;cursor:pointer;position:relative}
+#home .card .strip{height:70px}
+#home .card .bd{padding:10px 12px}
+#home .card b{display:block;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+#home .card small{color:var(--tb-mut)}
+#home .card .acts{position:absolute;top:6px;right:6px;display:flex;gap:4px}
+#home .card .acts button{padding:2px 7px;font-size:12px}
+/* Library: glass style (matches toolbar) */
+#home{background:radial-gradient(640px 260px at 10% 0,color-mix(in srgb,var(--ac) 55%,transparent),transparent 78%),radial-gradient(600px 260px at 90% 0,rgba(168,85,247,.45),transparent 78%),radial-gradient(520px 240px at 50% 100%,rgba(20,184,166,.32),transparent 78%),var(--bg)}
+#home .hh{position:sticky;top:0;z-index:5;padding:10px 14px;border-radius:20px;background:linear-gradient(135deg,var(--gl-a),var(--gl-b));border:1px solid var(--gl-bd);-webkit-backdrop-filter:blur(18px) saturate(200%);backdrop-filter:blur(18px) saturate(200%);box-shadow:0 14px 38px var(--gl-sh),inset 0 1px 0 var(--gl-in)}
+#home .hh h1{font-size:22px;font-weight:700;letter-spacing:-.3px;color:var(--tb-fg)}
+#home .hh button{display:inline-flex;align-items:center;gap:6px;background:transparent;color:var(--tb-fg);border:1px solid var(--gl-bd);border-radius:999px;padding:7px 14px;font-weight:600;transition:background .15s}
+#home .hh button:hover{background:var(--tb-hov)}
+#home .hh button.on{background:var(--ac);border-color:var(--ac);color:#fff}
+#home .hh button.bell{padding:7px 10px}
+#home .ic{width:16px;height:16px;flex:none;stroke:currentColor;fill:none;stroke-width:2;stroke-linecap:round;stroke-linejoin:round;display:block}
+#home .card{background:linear-gradient(135deg,var(--gl-a),var(--gl-b));border:1px solid var(--gl-bd);border-radius:18px;-webkit-backdrop-filter:blur(18px) saturate(180%);backdrop-filter:blur(18px) saturate(180%);box-shadow:0 10px 28px var(--gl-sh),inset 0 1px 0 var(--gl-in);transition:transform .2s ease,box-shadow .2s ease}
+#home .card:hover{transform:translateY(-3px);box-shadow:0 18px 40px var(--gl-sh),inset 0 1px 0 var(--gl-in)}
+#home .card .strip{height:84px;position:relative}
+#home .card .strip::after{content:"";position:absolute;inset:0;background:linear-gradient(135deg,rgba(255,255,255,.3),rgba(0,0,0,.16))}
+#home .card .bd{padding:14px 16px}
+#home .card b{font-size:15px;font-weight:650;color:var(--tb-fg);margin-bottom:4px}
+#home .card small{font-size:12px;line-height:1.5;color:var(--tb-mut)}
+#home .card .acts{gap:6px;opacity:0;transition:opacity .15s}
+#home .card:hover .acts,#home .card:focus-within .acts{opacity:1}
+@media(hover:none){#home .card .acts{opacity:1}}
+#home .card .acts button{display:flex;align-items:center;justify-content:center;width:30px;height:30px;padding:0;color:#fff;background:rgba(0,0,0,.4);border:1px solid rgba(255,255,255,.25);border-radius:10px;-webkit-backdrop-filter:blur(8px);backdrop-filter:blur(8px)}
+#home .card .acts button:hover{background:rgba(0,0,0,.6)}
+#home .card .acts button[data-d]:hover{background:rgba(220,38,38,.85)}
+#home .card .exp{top:100px;right:12px;width:28px;height:28px;padding:0;display:flex;align-items:center;justify-content:center;border-radius:999px;background:transparent;color:var(--tb-fg);border:1px solid var(--gl-bd)}
+#home .card .exp:hover{background:var(--tb-hov)}
+#home .card .secs{display:grid;grid-template-rows:0fr;padding:0;border-top:0;transition:grid-template-rows .45s cubic-bezier(.4,0,.2,1)}
+#home .card.open .secs{display:grid;grid-template-rows:1fr}
+#home .card .secs>.si{overflow:hidden;min-height:0;padding:0 8px;border-top:1px solid transparent;opacity:0;transition:opacity .35s,padding .45s cubic-bezier(.4,0,.2,1),border-color .35s}
+#home .card.open .secs>.si{padding:6px 8px 8px;border-top-color:var(--gl-bd);opacity:1}
+#home .card .bd{cursor:pointer}
+#home .card .bd>small{font-size:10px;line-height:1.4}
+#home .card .bd .bk{font-size:9px;padding:1px 6px;margin-top:3px}
+#home .card .acts{opacity:1}
+#home .card .acts button svg{fill:currentColor;stroke:none}
+#cmenu{position:fixed;z-index:1800;background:var(--bar);color:var(--fg);border:1px solid var(--bd);border-radius:10px;padding:4px;box-shadow:0 8px 30px rgba(0,0,0,.35);display:flex;flex-direction:column;min-width:170px;animation:cmIn .15s ease-out;transform-origin:top right}
+#cmenu button{display:flex;align-items:center;gap:10px;background:none;color:var(--fg);border:0;text-align:left;padding:9px 12px;border-radius:7px;font:inherit;cursor:pointer}
+#cmenu button:hover{background:var(--tb-hov)}
+#cmenu button svg{width:16px;height:16px;stroke:currentColor;fill:none;stroke-width:2;stroke-linecap:round;stroke-linejoin:round;flex:none}
+#cmenu button[data-d]{color:#dc2626}
+@keyframes cmIn{from{opacity:0;transform:scale(.92)}to{opacity:1;transform:none}}
+#dlg .clb{width:min(440px,92vw);max-height:84vh;overflow:auto}
+#dlg .clb h2{margin:0;font-size:16px}
+#dlg .clb .row{flex-wrap:wrap}
+#dlg .clb p,#dlg .clb li{font-size:13px;line-height:1.45}
+#dlg .clb label{display:block;font-size:12px;margin-top:10px;color:var(--tb-mut)}
+#dlg .clb input{display:block;width:100%;box-sizing:border-box;margin-top:3px;padding:8px 10px;background:var(--bg);color:var(--fg);border:1px solid var(--bd);border-radius:8px;font:13px system-ui}
+#dlg .clb pre{font-size:11px;background:var(--bg);border:1px solid var(--bd);border-radius:8px;padding:8px;overflow:auto;white-space:pre}
+#dlg .clb details{margin-top:10px;font-size:13px}
+#dlg .clb .clm{margin-top:10px;font-size:12px;min-height:16px}
+#dlg .clb .clm.err{color:#dc2626}
+#dlg .clb .clr{display:flex;align-items:center;gap:6px;padding:8px 0;border-top:1px solid var(--bd)}
+#dlg .clb .clr>div{flex:1;min-width:0}
+#dlg .clb .clr b{display:block;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;font-size:13px}
+#dlg .clb .clr small{font-size:11px;color:var(--tb-mut)}
+#dlg .clb .clr button{padding:4px 8px;font-size:12px}
+#home,#home *{-webkit-tap-highlight-color:transparent}
+#home .card,#home .card *{-webkit-user-select:none;user-select:none;-webkit-touch-callout:none}
+#home .card:focus,#home .card:focus-visible,#home .card *:focus,#home .card *:focus-visible{outline:none}
+#home .card::selection,#home .card *::selection{background:transparent}
+#home .card .sr{border-radius:10px;color:var(--tb-fg)}
+#home .bk{padding:2px 9px}
 </style>
 <style>
 #spl{position:fixed;inset:0;z-index:99999;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:26px;
@@ -444,6 +582,7 @@ setTimeout(hide,20000);
   <symbol id="i-hl" viewBox="0 0 512 512"><g fill="currentColor" stroke="none"><path d="M97.564,289.536C62.99,324.106-26.45,469.611,8.125,504.189c34.582,34.587,180.087-54.861,214.661-89.439l101.968-101.968L199.532,187.577L97.564,289.536z"/><path d="M485.75,26.572c-34.578-34.579-90.639-34.579-125.222,0l-8.36,8.36l-17.037-17.041C323.255,6.012,307.498-0.016,291.943,0c-15.563-0.016-31.32,6.012-43.191,17.9l-96.294,96.285c-8.239,8.251-8.246,21.63,0.004,29.889c8.255,8.259,21.642,8.251,29.893,0l96.285-96.285c3.73-3.714,8.419-5.49,13.302-5.507c4.879,0.017,9.578,1.786,13.294,5.498l17.041,17.041l-94.125,94.121l125.218,125.231l132.374-132.379C520.329,117.215,520.325,61.151,485.75,26.572z M300.902,181.608l-21.47-21.469l81.096-81.088l21.465,21.461L300.902,181.608z"/></g></symbol>
   <symbol id="i-eraser" viewBox="0 0 24 24"><path d="M20 20H8.5L3.6 15.1a1.5 1.5 0 010-2.1L13 3.6a1.5 1.5 0 012.1 0l5.3 5.3a1.5 1.5 0 010 2.1L11.5 20"/><path d="M7 10.5l6.5 6.5"/></symbol>
   <symbol id="i-area" viewBox="0 0 24 24"><path d="M9 22H21"/><path d="M2.90997 17.58L6.41998 21.09C7.58998 22.26 9.49997 22.26 10.66 21.09L21.09 10.66C22.26 9.48997 22.26 7.57997 21.09 6.41997L17.58 2.90997C16.41 1.73997 14.5 1.73997 13.34 2.90997L2.90997 13.34C1.73997 14.5 1.73997 16.41 2.90997 17.58Z"/><path d="M7.12 9.12988L14.87 16.8799"/><path d="M3.52002 17.66L9.16998 12"/><path d="M6.34003 20.4901L12 14.8301"/></symbol>
+  <symbol id="i-laser" viewBox="0 0 24 24"><rect x="2" y="15" width="11" height="4" rx="1.5" transform="rotate(-45 7.5 17)"/><path d="M16 8l3-3M17.5 12H21M12 6.5V3"/></symbol>
   <symbol id="i-text" viewBox="0 0 24 24"><path d="M4 7V5h16v2"/><path d="M12 5v14"/><path d="M9 19h6"/></symbol>
   <symbol id="i-image" viewBox="0 0 24 24"><rect x="3" y="4" width="18" height="16" rx="2.5"/><circle cx="9" cy="10" r="1.6"/><path d="M21 16l-5-5-9 9"/></symbol>
   <symbol id="i-plus" viewBox="0 0 24 24"><path d="M12 5v14M5 12h14"/></symbol>
@@ -460,6 +599,8 @@ setTimeout(hide,20000);
   <symbol id="i-import" viewBox="0 0 24 24"><path d="M12 3v12M7 10l5 5 5-5"/><path d="M4 19h16"/></symbol>
   <symbol id="i-export" viewBox="0 0 24 24"><path d="M12 15V3M7 8l5-5 5 5"/><path d="M4 19h16"/></symbol>
   <symbol id="i-save" viewBox="0 0 24 24"><path d="M5 3h11l4 4v13a1 1 0 01-1 1H5a1 1 0 01-1-1V4a1 1 0 011-1z"/><path d="M8 3v5h7V3M8 21v-7h8v7"/></symbol>
+  <symbol id="i-pages" viewBox="0 0 24 24"><path d="M9 6h11M9 12h11M9 18h11M4.5 6h.01M4.5 12h.01M4.5 18h.01"/></symbol>
+  <symbol id="i-lib" viewBox="0 0 24 24"><path d="M4 5a2 2 0 012-2h13v16H6a2 2 0 00-2 2zM4 19a2 2 0 002 2h13v-2M9 7h6"/></symbol>
   <symbol id="i-open" viewBox="0 0 24 24"><path d="M3 7a2 2 0 012-2h4l2 2h8a2 2 0 012 2v9a2 2 0 01-2 2H5a2 2 0 01-2-2z"/></symbol>
   <symbol id="i-scrib" viewBox="0 0 24 24"><path d="M4 6l16 3-16 3 16 3-16 3"/></symbol>
   <symbol id="i-arrow" viewBox="0 0 24 24"><path d="M4 20L20 4"/><path d="M9 4h11v11"/></symbol>
@@ -480,6 +621,8 @@ setTimeout(hide,20000);
      ============================================================ -->
 <div id="barShell"><div id="barGlass"></div>
 <div id="bar">
+  <button id="libBtn" class="ib" data-tip="Notebooks" aria-label="Notebooks"><svg class="ic"><use href="#i-lib"/></svg></button>
+  <button id="pgSideBtn" class="ib" data-tip="Page list" aria-label="Page list"><svg class="ic"><use href="#i-pages"/></svg></button>
   <div class="grp" id="gTools">
     <button id="mPen" class="ib on" data-tip="Pen" aria-label="Pen"><svg class="ic"><use href="#i-pen"/></svg></button>
     <button id="mHl" class="ib" data-tip="Highlighter" aria-label="Highlighter"><svg class="ic"><use href="#i-hl"/></svg></button>
@@ -496,6 +639,7 @@ setTimeout(hide,20000);
     </span>
     <button id="mSel" class="ib" data-tip="Select (click a text box or image to edit)" aria-label="Select"><svg class="ic"><use href="#i-sel"/></svg></button>
     <button id="mLs" class="ib" data-tip="Lasso (select, move, delete)" aria-label="Lasso"><svg class="ic"><use href="#i-lasso"/></svg></button>
+    <button id="mLaser" class="ib" data-tip="Laser pointer (fades away)" aria-label="Laser pointer"><svg class="ic"><use href="#i-laser"/></svg></button>
     <span class="grp">
       <button id="mAr" class="ib" data-tip="Area eraser (click again for size)" aria-label="Area eraser"><svg class="ic"><use href="#i-area"/></svg></button>
       <div id="arMenu" class="menu pmenu" style="display:none">
@@ -617,7 +761,13 @@ setTimeout(hide,20000);
 <!-- ============================================================
      MARKUP: STAGE
      ============================================================ -->
+<div id="tabs"></div>
 <div id="wrap"></div>
+<div id="home" hidden></div>
+<div id="libPop" hidden></div>
+<div id="pgBack"></div>
+<div id="pgSide"></div>
+<input type="file" id="homeFile" accept=".inkdown,.pdf,.zip,application/pdf,application/zip" style="display:none">
 
 <script src="https://cdnjs.cloudflare.com/ajax/libs/marked/9.1.6/marked.min.js" onload="__ld('Marked')" onerror="__ld('Marked')"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.16.9/katex.min.js" onload="__ld('KaTeX')" onerror="__ld('KaTeX')"></script>
@@ -769,6 +919,7 @@ function updatePageUI(){
   $('pgPrev').disabled=i<=0; $('pgNext').disabled=i>=pages.length-1;
   wrap.classList.toggle('multi',pages.length>1);
   for(const p of pages) p.el.classList.toggle('active',p===activePage);
+  pgListRender();
 }
 let navUntil=0; // ignore scroll-driven page switching while a jump-to-page scroll is animating
 function goToPage(i){
@@ -781,9 +932,36 @@ function addPage(){
   const pg=createPage();
   goToPage(pages.length-1);
   updatePageUI();
+  asMark(pg,true);
   return pg;
 }
 $('pgAdd').onclick=addPage;
+// ---- page list: numbered, tap to jump; docked on wide screens, drawer on narrow ----
+var pgLastN=-1;
+function pgSideNarrow(){ return innerWidth<900; }
+function pgListRender(){
+  const el=$('pgSide'); if(!el) return;
+  const i=pages.indexOf(activePage);
+  if(pgLastN!==pages.length){
+    pgLastN=pages.length;
+    el.innerHTML='<div class="pgh">Pages</div>'+pages.map((p,k)=>'<button data-pg="'+k+'">Page '+(k+1)+'</button>').join('')+'<button class="pgadd" data-pg="add">+ Page</button>';
+  }
+  el.querySelectorAll('[data-pg]').forEach(b=>b.classList.toggle('on',+b.dataset.pg===i));
+  if(document.body.classList.contains('pgSideOn')){ const a=el.querySelector('.on'); if(a) a.scrollIntoView({block:'nearest'}); }
+}
+function pgSideSet(on,save){
+  document.body.classList.toggle('pgSideOn',on);
+  if(save){ try{ localStorage.setItem('inkPgSide',on?'1':'0'); }catch(_){} }
+  pgListRender(); dispatchEvent(new Event('resize'));   // the page area changed width
+}
+$('pgSideBtn').onclick=()=>pgSideSet(!document.body.classList.contains('pgSideOn'),!pgSideNarrow());
+$('pgBack').onclick=()=>pgSideSet(false,false);
+$('pgSide').addEventListener('click',e=>{
+  const b=e.target.closest('[data-pg]'); if(!b) return;
+  if(b.dataset.pg==='add') addPage(); else goToPage(+b.dataset.pg);
+  if(pgSideNarrow()) pgSideSet(false,false);
+});
+(function(){ let v=null; try{ v=localStorage.getItem('inkPgSide'); }catch(_){} pgSideSet(pgSideNarrow()?false:v!=='0',false); })();
 $('pgPrev').onclick=()=>goToPage(pages.indexOf(activePage)-1);
 $('pgNext').onclick=()=>goToPage(pages.indexOf(activePage)+1);
 // Scrolling a different page into the most-visible spot makes it the active page.
@@ -971,6 +1149,45 @@ function repaintLayer(layer){
    --------------------------------------------------------------- */
 let lsSel=null, lsDraft=null, lsMove=null; // lasso state (selection / loop being drawn / drag-move)
 let mode='pen', cur=null, activeId=null;
+/* LASER POINTER — temporary red trail on the live canvas; never saved, never in undo history; fades out after release */
+let laser=null;   // stroke currently being drawn: {pg, pts:[{x,y}], down, upAt}
+let lasers=[];    // all visible laser strokes (drawing or waiting out their hold time)
+let laserRaf=0;
+const LASER_HOLD_MS=3000, LASER_FADE_MS=250; // stays fully visible 3 s after pen lift, then a very short fade-out
+function laserStop(){
+  if(laserRaf) cancelAnimationFrame(laserRaf);
+  laserRaf=0; laser=null; lasers=[]; clearLive();
+}
+function laserPath(pts){ // one smooth continuous path (midpoint quadratic curves) — no dots/threads
+  const n=pts.length;
+  lctx.beginPath(); lctx.moveTo(pts[0].x,pts[0].y);
+  if(n===1){ lctx.lineTo(pts[0].x+0.01,pts[0].y); return; }
+  for(let i=1;i<n-1;i++) lctx.quadraticCurveTo(pts[i].x,pts[i].y,(pts[i].x+pts[i+1].x)/2,(pts[i].y+pts[i+1].y)/2);
+  lctx.lineTo(pts[n-1].x,pts[n-1].y);
+}
+function laserFrame(){
+  const now=performance.now();
+  lasers=lasers.filter(s=>s.down||now-s.upAt<LASER_HOLD_MS+LASER_FADE_MS);
+  clearLive();
+  if(!lasers.length){ laserRaf=0; return; }
+  const L=live.getBoundingClientRect();
+  for(const s of lasers){
+    const age=s.down?0:now-s.upAt-LASER_HOLD_MS;
+    const a=age<=0?1:1-age/LASER_FADE_MS;
+    const r=s.pg.el.getBoundingClientRect(), k=r.width/s.pg.w;
+    lctx.save();
+    lctx.setTransform(dpr*k,0,0,dpr*k,dpr*(r.left-L.left),dpr*(r.top-L.top));
+    lctx.beginPath(); lctx.rect(0,0,s.pg.w,s.pg.h); lctx.clip();
+    lctx.globalAlpha=Math.max(0,a); lctx.lineCap='round'; lctx.lineJoin='round';
+    // 4 layers, outside -> inside: solid red body, bright red, pink, white core (lit from inside, no outer glow)
+    laserPath(s.pts); lctx.strokeStyle='#e01414'; lctx.lineWidth=6.4; lctx.stroke();
+    laserPath(s.pts); lctx.strokeStyle='#ff4d4d'; lctx.lineWidth=4.6; lctx.stroke();
+    laserPath(s.pts); lctx.strokeStyle='#ffb3b3'; lctx.lineWidth=3.2; lctx.stroke();
+    laserPath(s.pts); lctx.strokeStyle='#ffffff'; lctx.lineWidth=1.6; lctx.stroke();
+    lctx.restore();
+  }
+  laserRaf=requestAnimationFrame(laserFrame);
+}
 let textSubMode=null; // null | 'add' | 'edit' — which Text box menu choice is active
 const COLORS=['#111111','#2563eb','#dc2626','#16a34a','#f59e0b'];
 const COLOR_NAMES=['Black','Blue','Red','Green','Amber'];
@@ -1003,6 +1220,8 @@ function setMode(m){
   $('mLs').classList.toggle('on',m==='lasso');
   $('mPen').classList.toggle('on',m==='pen');
   $('mHl').classList.toggle('on',m==='hl');
+  $('mLaser').classList.toggle('on',m==='laser');
+  if(m!=='laser') laserStop();
   $('mEr').classList.toggle('on',m==='eraser');
   $('mAr').classList.toggle('on',m==='areaEraser');
   $('mTxt').classList.toggle('on',m==='text');
@@ -1016,6 +1235,7 @@ function updateStatus(){
     mode==='pen'?'Pen mode — draw with stylus or mouse · finger scrolls, two fingers pinch-zoom':
     mode==='eraser'?'Eraser mode — tap or drag over a stroke to remove it':
     mode==='areaEraser'?'Area eraser — drag over the region to erase; release to apply':
+    mode==='laser'?'Laser pointer — drag to point; the trail fades away and is not saved':
     mode==='select'?'Select — click a text box to edit it, or an image to select it · click empty space to deselect':
     mode==='lasso'?'Lasso — circle strokes to select · drag inside the box to move · ✕ or Delete removes':
     mode==='image'?'Image mode — pick a file, then drag/resize it on the page':
@@ -1028,6 +1248,7 @@ $('mHl').onclick=()=>setMode('hl');
 $('mEr').onclick=()=>setMode('eraser');
 $('mAr').onclick=()=>setMode('areaEraser');
 $('mLs').onclick=()=>setMode('lasso');
+$('mLaser').onclick=()=>setMode('laser');
 $('mSel').onclick=()=>setMode('select');
 // Render any text box that is still in edit mode (except `except`) so edits are kept
 function selCommitEditing(except){
@@ -1226,6 +1447,12 @@ function onDown(e){
   live.style.opacity=mode==='hl'?0.4:1;
   if(mode==='eraser'){ erRemoved=[]; eraseAt(q); return; }
   if(mode==='areaEraser'){ arDraft={pts:[q]}; drawAreaPreview(); return; }
+  if(mode==='laser'){
+    live.style.opacity=1;
+    laser={pg:gp,pts:[{x:q.x,y:q.y}],down:true,upAt:0};
+    lasers.push(laser);
+    if(!laserRaf) laserRaf=requestAnimationFrame(laserFrame); return;
+  }
   if(mode==='lasso'){
     if(lsSel&&lsSel.pg!==pg) clearLassoSel();
     const b=lsSel&&lsSel.box, m=8;
@@ -1248,6 +1475,7 @@ function onMove(e){
   }
   if(lsDraft){ for(const ev of evs) lsDraft.pts.push(pos(ev)); drawLassoPreview(); return; }
   if(erRemoved){ for(const ev of evs) eraseAt(pos(ev)); return; }
+  if(laser&&laser.down){ for(const ev of evs){ const q=pos(ev), l=laser.pts[laser.pts.length-1]; if(Math.hypot(q.x-l.x,q.y-l.y)>=0.8) laser.pts.push({x:q.x,y:q.y}); } return; }
   if(!cur) return;
   for(const ev of evs) addPt(pos(ev),pres(ev));
   clearLive();
@@ -1277,6 +1505,7 @@ function onUp(e){
   }
   if(lsDraft){ finishLasso(); return; }
   if(erRemoved){ if(erRemoved.length) gp.history.push({t:'erase',items:erRemoved}); erRemoved=null; return; }
+  if(laser&&laser.down){ laser.down=false; laser.upAt=performance.now(); laser=null; return; }
   if(!cur) return;
   if(cur.pts.length<2) cur.pts.push({...cur.pts[0]});
   if(scribOn&&!cur.alpha&&scribbleErase(cur.pts)) return; // scribble over existing ink: erase it (undoable), scribble itself is dropped
@@ -1638,7 +1867,7 @@ function createBox(pg,x,y,w,h,noEdit){
   pg.stage.appendChild(el);
   box.el=el; box.ta=ta; box.rd=rd;
   applyBoxFont(box);
-  pg.boxes.push(box); elBoxMap.set(el,box);
+  pg.boxes.push(box); elBoxMap.set(el,box); asMark(pg,true);
   applyBoxRect(box);
   for(const d of ['nw','n','ne','e','se','s','sw','w']) addHandle(box,d);
   addMoveHandle(box); // centre reposition button: shown in rendered mode only (hidden while editing raw markdown)
@@ -1744,7 +1973,7 @@ function createImageBox(dataUrl,natW,natH,rs){
     moveBtn.addEventListener('pointermove',onM);moveBtn.addEventListener('pointerup',onU);moveBtn.addEventListener('pointercancel',onU);
   });
   el.addEventListener('click',ev=>{ if(mode!=='image') return; ev.stopPropagation(); selectBox(box); });
-  if(!rs) selectBox(box);
+  if(!rs){ selectBox(box); asMark(pg,true); }
   return box;
 }
 /* CROP — shows the full original dimmed with a draggable crop rectangle; Apply bakes the region into box.dataUrl
@@ -2491,6 +2720,7 @@ function replaceAllPages(specs,file,doc){
     setZoom(Math.min(zoom,Math.max(ZMIN,(wrap.clientWidth-32)/widest)));
   }
   if(baseIO) for(const p of pages) baseIO.observe(p.el);
+  asNewDoc(file);
 }
 async function importPdfFile(file){
   importing=true; $('impPdf').disabled=true;
@@ -2514,12 +2744,11 @@ async function importPdfFile(file){
 $('impPdf').onclick=async()=>{
   if(importing||activeId!==null) return;
   loadPdfJs().catch(()=>{});                       // start loading now (first click); errors surface on import
-  if(docHasContent()&&!(await askReplace())) return;
   $('pdfFile').click();
 };
 $('pdfFile').addEventListener('change',e=>{
   const f=e.target.files[0]; e.target.value='';
-  if(f) importPdfFile(f);
+  if(f) asOpenAny(f);
 });
 
 /* ---------------------------------------------------------------
@@ -2578,7 +2807,8 @@ async function buildPageItems(pg,data,zip){
       const disp=it.crop?await cropUrl(orig,it.crop):orig;
       if(pg.dead) return;
       createImageBox(disp,it.ow,it.oh,{pg,props:{xPct:it.x,yPct:it.y,wPct:it.w,hPct:it.h,keepRatio:it.kr!==false,
-        orig,origW:it.ow,origH:it.oh,crop:it.crop||null,origImg:Object.assign(new Image(),{src:orig})}});
+        orig,origW:it.ow,origH:it.oh,crop:it.crop||null,origImg:Object.assign(new Image(),{src:orig}),
+        ...(zip.__as?{assetId:it.file.split('.')[0],asExt:it.file.split('.').pop()}:{})}});
     }
   }
 }
@@ -2591,7 +2821,7 @@ async function hydratePage(pg){
     if(pg.dead||zip!==projZip) return;
     await buildPageItems(pg,data,zip);
     if(pg.dead) return;
-    pg.pend=null; pg.el.classList.remove('pending');
+    pg.pend=null; pg.el.classList.remove('pending'); pg.asCnt=asStrokes(pg);
   }catch(e){
     console.error(e); $('st').textContent='Could not load page '+(pages.indexOf(pg)+1)+': '+(e&&e.message||e);
   }finally{ projHyd.delete(pg); }
@@ -2614,8 +2844,8 @@ async function openProjectFile(file){
   $('st').textContent='Opening project…';
   let doc=null;
   try{
-    if(!window.JSZip) throw new Error('ZIP library not loaded (check internet).');
-    const zip=await JSZip.loadAsync(file);
+    if(!file.__asZip&&!window.JSZip) throw new Error('ZIP library not loaded (check internet).');
+    const zip=file.__asZip||await JSZip.loadAsync(file);
     const mf=zip.file('manifest.json'); if(!mf) throw new Error('not a valid .inkdown file.');
     const man=JSON.parse(await mf.async('string'));
     if(man.app!=='inkdown'||!Array.isArray(man.pages)||!man.pages.length) throw new Error('not a valid .inkdown file.');
@@ -2717,15 +2947,898 @@ async function saveProject(){
     console.error(err); $('st').textContent='Save failed: '+(err&&err.message||err);
   }finally{ projBusy=false; setProjBtns(false); }
 }
-$('saveProj').onclick=saveProject;
+$('saveProj').onclick=()=>saveProject();
+
+/* ---- autosave (IndexedDB) + refresh guard + restore ---- */
+/* Structure: notebook (nb1) > section (sec1) > pages > assets (pdf / images).  One IndexedDB record per page,
+   images + the source PDF are stored once as assets. Autosave rewrites ONLY the changed page records. */
+const AS_DB='inkdown-notes', AS_STROKES=30;
+const AS_COLOR='#2563eb';   // default notebook / section color until the palette (D4) is chosen
+let AS_NB='nb1', AS_SEC='sec1';   // current notebook / section: reassigned when the user switches (always after asFlushNow())
+let asDbP=null, asDirty=new Set(), asTimer=0, asDue=0, asBusy=false, asAgain=false;
+let asReset=false, asEpoch=0, asPdf=null, asRestoring=false, asHold=true, asAllowUnload=false;
+const asUid=()=>Date.now().toString(36)+Math.random().toString(36).slice(2,8);
+const asIdle=f=>('requestIdleCallback' in window)?requestIdleCallback(()=>f(),{timeout:2000}):setTimeout(f,0);
+function asOpen(){
+  return asDbP||(asDbP=new Promise((res,rej)=>{
+    const r=indexedDB.open(AS_DB,2);
+    r.onupgradeneeded=()=>{ const d=r.result, t=r.transaction;   // v1 -> v2 keeps all data; v2 adds sections.nb index
+      const mk=(n,o)=>d.objectStoreNames.contains(n)?t.objectStore(n):d.createObjectStore(n,o);
+      const ix=(s,n,k)=>{ if(!s.indexNames.contains(n)) s.createIndex(n,k); };
+      mk('notebooks',{keyPath:'id'});
+      ix(mk('sections',{keyPath:'id'}),'nb','notebookId');
+      ix(mk('pages',{keyPath:'id'}),'sec','sectionId');
+      ix(mk('assets',{keyPath:'id'}),'sec','sectionId');
+      mk('settings',{keyPath:'key'});
+    };
+    r.onsuccess=()=>{ const d=r.result; d.onversionchange=()=>{ d.close(); asDbP=null; }; res(d); };   // never block another tab's upgrade
+    r.onerror=()=>{ asDbP=null; rej(r.error); };
+  }));
+}
+function asTx(names,mode,fn){
+  return asOpen().then(db=>new Promise((res,rej)=>{
+    const t=db.transaction(names,mode); let out;
+    try{ out=fn(...names.map(n=>t.objectStore(n))); }catch(e){ try{ t.abort(); }catch(_){} return rej(e); }
+    t.oncomplete=()=>res(out&&'result' in out?out.result:out); t.onerror=t.onabort=()=>rej(t.error);
+  }));
+}
+const asB64Blob=(b64,mime)=>{ const bin=atob(b64), u=new Uint8Array(bin.length); for(let i=0;i<bin.length;i++) u[i]=bin.charCodeAt(i); return new Blob([u],{type:mime}); };
+const asBlobB64=b=>new Promise((res,rej)=>{ const f=new FileReader(); f.onload=()=>res(String(f.result).split(',')[1]||''); f.onerror=()=>rej(f.error); f.readAsDataURL(b); });
+const asStrokes=pg=>pg.inkLayers.reduce((n,l)=>n+l.strokes.length,0);
+// Replace the old records of this section (pages or assets) by new ones, atomically inside one transaction.
+function asSwap(store,del,recs){
+  const put=()=>{ for(const r of recs) store.put(r); };
+  if(!del){ put(); return; }
+  const q=store.index('sec').getAllKeys(AS_SEC);
+  q.onsuccess=()=>{ for(const k of q.result) store.delete(k); put(); };
+}
+// Read-only view of the stored section that looks like a JSZip, so openProjectFile / hydratePage load from IndexedDB unchanged.
+function asZipFor(sec){
+  const man={app:'inkdown',version:1,name:sec.name,zoom:sec.zoom,active:sec.active,
+    pdf:sec.pdf?{file:'pdf/source.pdf',name:sec.pdf.name}:null,
+    pages:sec.pages.map(p=>({w:p.w,h:p.h,pdfPage:p.pdfPage,data:'page:'+p.id}))};
+  return {__as:true,file(name){
+    if(name==='pdf/source.pdf'&&!sec.pdf) return null;
+    return {async:async type=>{
+      if(name==='manifest.json') return JSON.stringify(man);
+      if(name.startsWith('page:')){
+        const r=await asTx(['pages'],'readonly',s=>s.get(name.slice(5)));
+        if(!r) throw new Error('Missing page'); return r.json;
+      }
+      const a=await asTx(['assets'],'readonly',s=>s.get(name==='pdf/source.pdf'?sec.pdf.id:name.split('.')[0]));
+      if(!a) throw new Error('Missing asset');
+      if(type==='base64') return asBlobB64(a.blob);
+      return new Uint8Array(await a.blob.arrayBuffer());
+    }};
+  }};
+}
+// A whole new document (PDF import / project open): the stored section is replaced on the next flush.
+function asNewDoc(file){
+  if(asRestoring) return;
+  asEpoch++; asReset=true; asDirty.clear();
+  asPdf=file?{file,id:null}:null;
+  for(const pg of pages){ pg.id=null; pg.asLast=null; pg.asCnt=0; asDirty.add(pg); }
+  asSchedule(1500);
+}
+function asSchedule(ms){
+  if(asTimer&&asDue<=Date.now()+ms) return;
+  clearTimeout(asTimer); asDue=Date.now()+ms;
+  asTimer=setTimeout(()=>{ asTimer=0; asIdle(asFlush); },ms);
+}
+function asMark(pg,soon){
+  if(!pg||pg.pend||pg.dead) return;
+  asDirty.add(pg); asSchedule(soon?400:5000);
+}
+// Serialise one page. Images are written once as assets and referenced by id.
+async function asPageRec(pg,assets,fresh,force){
+  let items=[];
+  if(pg.pend){
+    if(pg.pend.zip.__as) return null;                 // untouched page already stored under its own id
+    const d=JSON.parse(await pg.pend.zip.file(pg.pend.path).async('string'));
+    items=d.items||[];
+    for(const it of items) if(it.t==='image'){
+      const ext=(it.file.split('.').pop()||'png').toLowerCase(), id=asUid();
+      assets.push({id,sectionId:AS_SEC,kind:'image',blob:new Blob([await pg.pend.zip.file(it.file).async('uint8array')],{type:MIME_BY_EXT[ext]||'image/png'})});
+      it.file=id+'.'+ext;
+    }
+  }else{
+    for(const el of pg.stage.children){
+      const layer=elLayerMap.get(el);
+      if(layer){
+        if(!layer.strokes.length) continue;
+        items.push({t:'ink',strokes:layer.strokes.map(sd=>{
+          const {pts,...rest}=sd, flat=[];
+          for(const q of pts) flat.push(r2(q.x),r2(q.y),Math.round(q.p*1000)/1000);
+          return {...rest,pts:flat};
+        })});
+        continue;
+      }
+      const b=elBoxMap.get(el); if(!b||b.page!==pg) continue;
+      if(b.kind==='image'){
+        if(!b.assetId){
+          const {mime,b64}=splitDataUrl(b.orig);
+          b.assetId=asUid(); b.asExt=EXT_BY_MIME[mime]||'png'; fresh.push(b);
+          assets.push({id:b.assetId,sectionId:AS_SEC,kind:'image',blob:asB64Blob(b64,mime)});
+        }
+        items.push({t:'image',file:b.assetId+'.'+b.asExt,x:r4(b.xPct),y:r4(b.yPct),w:r4(b.wPct),h:r4(b.hPct),
+          kr:!!b.keepRatio,ow:b.origW,oh:b.origH,crop:b.crop?{x:b.crop.x,y:b.crop.y,w:b.crop.w,h:b.crop.h}:null});
+      }else{
+        items.push({t:'text',x:r4(b.xPct),y:r4(b.yPct),w:r4(b.wPct),h:r4(b.hPct),
+          md:el.classList.contains('editing')?b.ta.value:b.md,fs:b.fontSize,ff:b.fontFamily});
+      }
+    }
+  }
+  const json=JSON.stringify({items});
+  if(!force&&pg.asLast===json) return null;           // nothing changed on this page
+  return {id:pg.id,sectionId:AS_SEC,json,updated:Date.now(),_pg:pg};
+}
+async function asFlush(){
+  asTimer=0;
+  if(asHold||asDetached) return;
+  if(asBusy){ asAgain=true; return; }
+  if(cur||penDown||projBusy||importing||exporting){ asSchedule(800); return; }   // never while writing a stroke
+  if(!asDirty.size&&!asReset&&!pages.some(p=>!p.id)) return;
+  asBusy=true;
+  const ep=asEpoch, reset=asReset; asReset=false;
+  for(const pg of pages) if(!pg.id){ pg.id=asUid(); asDirty.add(pg); }
+  const list=[...asDirty].filter(p=>pages.includes(p)); asDirty.clear();
+  const assets=[], fresh=[], recs=[];
+  try{
+    for(const pg of list){
+      const r=await asPageRec(pg,assets,fresh,reset||pg.asLast==null);
+      if(ep!==asEpoch) return;                         // document was replaced meanwhile
+      if(r) recs.push(r);
+    }
+    let pdfId=asPdf&&asPdf.id;
+    if(asPdf&&!pdfId){ pdfId=asUid(); assets.push({id:pdfId,sectionId:AS_SEC,kind:'pdf',name:asPdf.file.name,blob:asPdf.file}); }
+    const sec={id:AS_SEC,notebookId:AS_NB,name:asName||(asPdf?asPdf.file.name.replace(/\.pdf$/i,''):'Section 1'),order:0,
+      pages:pages.map(p=>({id:p.id,w:p.w,h:p.h,pdfPage:p.src?p.src.pageNum:0})),
+      pdf:asPdf?{id:pdfId,name:asPdf.file.name}:null,
+      zoom:r4(zoom),active:Math.max(0,pages.indexOf(activePage)),hasContent:docHasContent(),updated:Date.now()};
+    await asTx(['notebooks','sections','pages','assets','settings'],'readwrite',(nbS,secS,pgS,asS,stS)=>{
+      asSwap(pgS,reset,recs.map(({_pg,...r})=>({...r,sectionId:AS_SEC})));
+      asSwap(asS,reset,assets);
+      // created / color are kept from the stored record; size = per-page JSON bytes (kept in pgSize) + asset bytes (estimate)
+      const gs=secS.get(AS_SEC), gn=nbS.get(AS_NB), newAs=assets.reduce((n,a)=>n+((a.blob&&a.blob.size)||0),0);
+      gs.onsuccess=()=>{
+        const o=gs.result||{}, prev=reset?{}:(o.pgSize||{}), pgSize={}, now=Date.now();
+        for(const p of sec.pages) pgSize[p.id]=prev[p.id]||0;
+        for(const r of recs) pgSize[r.id]=r.json.length;
+        const assetBytes=(reset?0:(o.assetBytes||0))+newAs;
+        secS.put({...sec,name:o.name||sec.name,order:o.order!=null?o.order:0,created:o.created||now,color:o.color||AS_COLOR,pageCount:sec.pages.length,pgSize,assetBytes,
+          size:Object.values(pgSize).reduce((a,b)=>a+b,0)+assetBytes});
+      };
+      gn.onsuccess=()=>{ const o=gn.result||{};
+        nbS.put({...o,id:AS_NB,name:o.name||'Notebook 1',created:o.created||Date.now(),color:o.color||AS_COLOR,lastSec:AS_SEC,updated:Date.now()}); };
+      stS.put({key:'current',notebookId:AS_NB,sectionId:AS_SEC});
+    });
+    for(const r of recs){ r._pg.asLast=r.json; r._pg.asCnt=asStrokes(r._pg); }
+    if(asPdf) asPdf.id=pdfId;
+    asAfterFlush();
+  }catch(err){
+    console.error('Autosave failed',err);
+    if(err&&err.name==='QuotaExceededError') $('st').textContent='Your device is out of space, so autosave failed. Back up your work and free some space.';
+    for(const b of fresh){ b.assetId=null; }
+    for(const pg of list) asDirty.add(pg);
+    if(reset) asReset=true;
+    asSchedule(5000);
+  }finally{
+    asBusy=false; asTabs();
+    if(asAgain||asDirty.size){ asAgain=false; asSchedule(300); }
+  }
+}
+async function asFlushNow(){
+  for(let i=0;i<30&&asBusy;i++) await new Promise(r=>setTimeout(r,100));
+  await asFlush();
+}
+// Triggers: every 30 new strokes (immediately), image / text box / page added (~0.4 s), any other edit (5 s), tab hidden / closed (now).
+function asAfterInput(a,b){
+  let soon=false;
+  for(const pg of new Set([a,b])){
+    if(!pg||pg.pend||pg.dead) continue;
+    asDirty.add(pg);
+    if(Math.abs(asStrokes(pg)-(pg.asCnt||0))>=AS_STROKES) soon=true;
+  }
+  asSchedule(soon?50:5000);
+}
+['pointerup','keyup','input','change','click'].forEach(ev=>document.addEventListener(ev,e=>{
+  const a=pageOf(e.target)||gp, b=activePage;
+  setTimeout(()=>asAfterInput(a,b),0);              // after the page's own handler has committed the stroke
+},true));
+document.addEventListener('visibilitychange',()=>{ if(document.visibilityState==='hidden') asFlush(); });
+window.addEventListener('pagehide',()=>asFlush());
+window.addEventListener('beforeunload',e=>{
+  if(asAllowUnload||!docHasContent()) return;
+  asFlush();
+  e.preventDefault(); e.returnValue='';
+});
+function askReload(){
+  return new Promise(res=>{
+    const d=document.createElement('div'); d.id='dlg';
+    d.innerHTML='<div class="box"><div>Reloading the page closes your current work. It is autosaved and can be restored after reload.</div>'+
+      '<label style="display:flex;gap:8px;align-items:center;margin-top:12px;cursor:pointer"><input type="checkbox" id="dlgChk"> I understand, reload anyway</label>'+
+      '<div class="row"><button id="dlgCancel">Cancel</button><button id="dlgOk" class="on" disabled style="opacity:.5">Reload</button></div></div>';
+    const chk=d.querySelector('#dlgChk'), ok=d.querySelector('#dlgOk');
+    chk.onchange=()=>{ ok.disabled=!chk.checked; ok.style.opacity=chk.checked?'1':'.5'; };
+    const done=v=>{ d.remove(); res(v); };
+    ok.onclick=()=>done(true);
+    d.querySelector('#dlgCancel').onclick=()=>done(false);
+    d.addEventListener('pointerdown',e=>{ if(e.target===d) done(false); });
+    document.body.appendChild(d);
+  });
+}
+let askingReload=false;
+document.addEventListener('keydown',async e=>{
+  const k=(e.key||'').toLowerCase();
+  if(!(k==='f5'||((e.ctrlKey||e.metaKey)&&k==='r'))) return;
+  if(!docHasContent()) return;
+  e.preventDefault();
+  if(askingReload) return;
+  askingReload=true;
+  const ok=await askReload();
+  askingReload=false;
+  if(!ok) return;
+  await asFlushNow();
+  asAllowUnload=true; location.reload();
+},true);
+// V85 stored the whole note as one blob in 'inkdown-auto'; it is read once and migrated into the new structure.
+function asLegacy(){
+  return new Promise(res=>{
+    let fresh=false; const r=indexedDB.open('inkdown-auto');
+    r.onupgradeneeded=()=>{ fresh=true; };
+    r.onerror=()=>res(null);
+    r.onsuccess=()=>{
+      const db=r.result;
+      if(fresh||!db.objectStoreNames.contains('s')){ db.close(); indexedDB.deleteDatabase('inkdown-auto'); return res(null); }
+      const g=db.transaction('s').objectStore('s').get('last');
+      g.onsuccess=()=>{ db.close(); res(g.result&&g.result.blob?g.result:null); };
+      g.onerror=()=>{ db.close(); res(null); };
+    };
+  });
+}
+/* ---- V87: notebooks > sections UI (Home screen, section tabs). Data layer = the stores above. ---- */
+const NB_PAL=['#2563eb','#dc2626','#16a34a','#d97706','#9333ea','#0891b2','#db2777','#4b5563'];
+let asDetached=false, asSwitching=false, asName=null, asTabSig='';   // asDetached: the open document belongs to a deleted notebook/section -> no autosave
+function hideLib(){ const h=$('home');
+  if(h.hidden||!h.animate||matchMedia('(prefers-reduced-motion: reduce)').matches) h.hidden=true;
+  else { const a=h.animate([{opacity:1,transform:'scale(1)'},{opacity:0,transform:'scale(1.04)'}],{duration:750,easing:'cubic-bezier(.4,0,.2,1)',fill:'forwards'}); h._hl=a;
+    a.onfinish=()=>{ if(h._hl===a){ h.hidden=true; a.cancel(); h._hl=null; } }; }
+  if(!(history.state&&history.state.ed)) history.pushState({ed:1},''); }   // entering the editor = one history step, so the system Back button returns to the Library
+function showLib(){ return asSettle().then(()=>homeRender()).then(()=>{ const h=$('home'); if(h._hl){ h._hl.cancel(); h._hl=null; } h.hidden=false; }); }
+window.addEventListener('popstate',()=>{ if($('home').hidden) showLib(); });
+const esc=s=>String(s).replace(/[&<>"]/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]));
+const mb=n=>(n/1048576).toFixed(n<1048576*10?1:0)+' MB';
+const nbSecs=async nb=>((await asTx(['sections'],'readonly',s=>s.index('nb').getAll(nb)))||[]).sort((a,b)=>(a.order||0)-(b.order||0));
+const asSecPatch=(id,p)=>asTx(['sections'],'readwrite',s=>{ const g=s.get(id); g.onsuccess=()=>{ if(g.result) s.put({...g.result,...p}); }; });
+// make sure everything edited so far is on disk before the document is replaced
+async function asSettle(){
+  if(asHold||asDetached) return;
+  for(let i=0;i<40;i++){
+    if(asTimer){ clearTimeout(asTimer); asTimer=0; }
+    await asFlushNow();
+    if(!asBusy&&!asDirty.size&&!asReset&&!pages.some(p=>!p.id)) return;
+    await new Promise(r=>setTimeout(r,100));
+  }
+}
+async function asLoadSec(sec){
+  asRestoring=true;
+  try{ await openProjectFile({__asZip:asZipFor(sec),name:sec.name}); }finally{ asRestoring=false; }
+  if(pages.length!==sec.pages.length) throw new Error('restore failed');
+  pages.forEach((pg,i)=>{ pg.id=sec.pages[i].id; });
+  const pf=pages.find(p=>p.src);
+  asPdf=(sec.pdf&&pf)?{file:pf.src.file,id:sec.pdf.id}:null;
+}
+// switch the editor to another section (always: save first, then load)
+async function asGo(nb,secId){
+  if(asSwitching) return; asSwitching=true;
+  try{
+    await asSettle();
+    asHold=true; AS_NB=nb; AS_SEC=secId; asDetached=false; asName=null; asPdf=null; asReset=false; asDirty.clear();
+    const sec=await asTx(['sections'],'readonly',s=>s.get(secId));
+    if(sec&&sec.pages&&sec.pages.length) await asLoadSec(sec); else replaceAllPages([{w:794,h:1123}],null,null);
+    asHold=false; asSchedule(500);
+    await asTx(['settings','notebooks'],'readwrite',(st,nbS)=>{
+      st.put({key:'current',notebookId:nb,sectionId:secId});
+      const g=nbS.get(nb); g.onsuccess=()=>{ if(g.result) nbS.put({...g.result,lastSec:secId}); };
+    });
+    hideLib();
+  }catch(err){ console.error(err); $('st').textContent='Switch failed — autosave paused, saved data kept. Reload to retry.'; }
+  finally{ asSwitching=false; asTabs(); }
+}
+async function asAddSec(name){
+  await asSettle();
+  const list=await nbSecs(AS_NB), n=list.length, id='s'+asUid(), now=Date.now();
+  await asTx(['sections'],'readwrite',s=>s.put({id,notebookId:AS_NB,name:name||'Section '+(n+1),order:n?(list[n-1].order||0)+1:0,
+    color:NB_PAL[n%NB_PAL.length],created:now,updated:now,pageCount:0,size:0,pages:[],pdf:null,hasContent:false}));
+  await asGo(AS_NB,id);
+}
+async function asNewNb(name){
+  await asSettle();
+  const id='n'+asUid(), sid='s'+asUid(), now=Date.now();
+  const cnt=(await asTx(['notebooks'],'readonly',s=>s.count()))||0;
+  await asTx(['notebooks','sections'],'readwrite',(nb,sc)=>{
+    nb.put({id,name:name||'Notebook '+(cnt+1),created:now,color:NB_PAL[cnt%NB_PAL.length],updated:now,lastSec:sid});
+    sc.put({id:sid,notebookId:id,name:'Section 1',order:0,color:NB_PAL[0],created:now,updated:now,pageCount:0,size:0,pages:[],pdf:null,hasContent:false});
+  });
+  await asGo(id,sid);
+}
+function asWipe(ids,nbId){
+  return asTx(['sections','pages','assets','notebooks','settings'],'readwrite',(sc,pg,as,nb,st)=>{
+    for(const id of ids){ sc.delete(id); for(const s of [pg,as]){ const q=s.index('sec').getAllKeys(id); q.onsuccess=()=>q.result.forEach(k=>s.delete(k)); } }
+    if(nbId){ nb.delete(nbId); if(nbId===AS_NB) st.delete('current'); }
+  });
+}
+
+// ---- in-page dialogs (native confirm()/prompt() are blocked in sandboxed pages) ----
+function asDlg(html,btns,input){
+  return new Promise(res=>{
+    const d=document.createElement('div'); d.id='dlg';
+    d.innerHTML='<div class="box" style="width:min(340px,86vw)">'+html+(input!=null?'<input id="dlgIn" type="text" style="width:100%;box-sizing:border-box;margin-top:10px;padding:8px;border-radius:6px;border:1px solid var(--bd);background:var(--bg);color:var(--fg)">':'')+
+      '<div class="row">'+btns.map(b=>'<button data-b="'+b.id+'"'+(b.on?' class="on"':'')+(b.red?' style="background:#dc2626;color:#fff;border-color:#dc2626"':'')+'>'+b.label+'</button>').join('')+'</div></div>';
+    const inp=d.querySelector('#dlgIn'); if(inp) inp.value=input;
+    const done=id=>{ const v=inp?inp.value:''; d.remove(); res({id,value:v}); };
+    d.addEventListener('click',e=>{ const b=e.target.closest('[data-b]'); if(b) done(b.dataset.b); else if(e.target===d) done('cancel'); });
+    if(inp) inp.addEventListener('keydown',e=>{ if(e.key==='Enter') done('ok'); else if(e.key==='Escape') done('cancel'); });
+    document.body.appendChild(d); if(inp){ inp.focus(); inp.select(); }
+  });
+}
+async function asAskText(title,val){ const r=await asDlg('<div>'+esc(title)+'</div>',[{id:'cancel',label:'Cancel'},{id:'ok',label:'OK',on:1}],val); return r.id==='ok'?r.value.trim():null; }
+function asBackupLine(nb,size){
+  if(!size) return 'Nothing saved in it yet.';
+  if(!nb||!nb.lastBackup) return '<b style="color:#dc2626">Never backed up.</b>';
+  const d=new Date(nb.lastBackup).toLocaleString();
+  return nb.lastBackup<(nb.updated||0)?'<b style="color:#d97706">Last backup '+d+' — newer changes are not in it.</b>':'Backed up '+d+'.';
+}
+async function asDelSec(id){
+  const sec0=await asTx(['sections'],'readonly',s=>s.get(id)), nb0=await asTx(['notebooks'],'readonly',s=>s.get(AS_NB));
+  const r0=await asDlg('<b>Delete section “'+esc(sec0?sec0.name:'')+'”?</b><div style="margin-top:6px">'+(sec0&&sec0.pageCount||0)+' page(s) · '+mb(sec0&&sec0.size||0)+'</div><div style="margin-top:6px">Notebook backup: '+asBackupLine(nb0,sec0&&sec0.size)+'</div><div style="margin-top:6px">This cannot be undone.</div>',
+    [{id:'cancel',label:'Cancel'},...(sec0&&sec0.size?[{id:'exp',label:'Export notebook first'}]:[]),{id:'del',label:'Delete',red:1}]);
+  if(r0.id==='exp'){ await asExportNb(AS_NB); return asDelSec(id); }
+  if(r0.id!=='del') return;
+  await asSettle();
+  const list=await nbSecs(AS_NB), i=list.findIndex(s=>s.id===id), isCur=id===AS_SEC;
+  if(isCur) asDetached=true;
+  await asWipe([id]);
+  if(!isCur){ asTabs(); return; }
+  const nx=list[i+1]||list[i-1];
+  if(nx) await asGo(AS_NB,nx.id); else await asAddSec('Section 1');
+}
+async function asDelNb(id){
+  const nb0=await asTx(['notebooks'],'readonly',s=>s.get(id)), ss0=await nbSecs(id), sz0=ss0.reduce((a,x)=>a+(x.size||0),0);
+  const r0=await asDlg('<b>Delete notebook “'+esc(nb0?nb0.name:'')+'”?</b><div style="margin-top:6px">'+ss0.length+' section'+(ss0.length===1?'':'s')+' · '+mb(sz0)+'</div><div style="margin-top:6px">'+asBackupLine(nb0,sz0)+'</div><div style="margin-top:6px">This cannot be undone.</div>',
+    [{id:'cancel',label:'Cancel'},...(sz0?[{id:'exp',label:'Export first'}]:[]),{id:'del',label:'Delete',red:1}]);
+  if(r0.id==='exp'){ await asExportNb(id); return asDelNb(id); }
+  if(r0.id!=='del') return;
+  if(id===AS_NB){ await asSettle(); asDetached=true; }
+  await asWipe((await nbSecs(id)).map(s=>s.id),id);
+  homeRender();
+}
+async function asMove(id,d){
+  const ids=(await nbSecs(AS_NB)).map(s=>s.id), i=ids.indexOf(id), j=i+d;
+  if(i<0||j<0||j>=ids.length) return;
+  [ids[i],ids[j]]=[ids[j],ids[i]];
+  await asTx(['sections'],'readwrite',s=>{ ids.forEach((x,k)=>{ const g=s.get(x); g.onsuccess=()=>{ s.put({...g.result,order:k}); }; }); });
+}
+// Open a .inkdown or PDF: it becomes its own section (an untouched blank section is reused)
+async function asPrep(name){
+  hideLib();
+  if(asDetached) await asNewNb();
+  if(!docHasContent()){ asName=name; await asSecPatch(AS_SEC,{name}); asTabs(); }
+  else await asAddSec(name);
+}
+async function asOpenAny(f){
+  let isNb=/\.zip$/i.test(f.name);
+  if(!isNb&&/\.inkdown$/i.test(f.name)&&window.JSZip){ try{ const z=await JSZip.loadAsync(f); isNb=!!z.file('notebook.json')&&!z.file('manifest.json'); }catch(_){} }
+  if(isNb){ $('home').hidden=true; return asImportNbZip(f); }
+  if(/\.pdf$/i.test(f.name)||f.type==='application/pdf'){ await asPrep(f.name.replace(/\.pdf$/i,'')); importPdfFile(f); }
+  else{ await asPrep(f.name.replace(/\.inkdown$/i,'')); openProjectFile(f); }
+}
+async function asTabs(){
+  try{
+    const [list,nb]=await Promise.all([nbSecs(AS_NB),asTx(['notebooks'],'readonly',s=>s.get(AS_NB))]);
+    const sig=AS_SEC+'|'+(nb?nb.name:'')+'|'+list.map(s=>s.id+s.name+s.color).join(',');
+    if(!$('libPop').hidden) libPopRender();
+    if(sig===asTabSig) return; asTabSig=sig;
+    $('tabs').innerHTML='<button id="tbHome" title="Back to library">← Library</button><span class="nbn">'+esc(nb?nb.name:'Notebook')+'</span>'+
+      list.map(s=>'<button class="sec'+(s.id===AS_SEC?' on':'')+'" data-sec="'+s.id+'" style="border-bottom-color:'+s.color+'">'+esc(s.name)+'</button>').join('')+
+      '<button id="tbAdd" title="New section">+</button>';
+  }catch(_){}
+}
+function asTabMenu(id,x,y){
+  const old=$('tmenu'); if(old) old.remove();
+  const m=document.createElement('div'); m.id='tmenu';
+  m.innerHTML='<button data-a="ren">Rename</button><button data-a="col">Change color</button><button data-a="l">Move left</button><button data-a="r">Move right</button><button data-a="del">Delete</button>';
+  m.style.left=Math.min(x,innerWidth-170)+'px'; m.style.top=(y+4)+'px';
+  m.onclick=async e=>{
+    const a=e.target.dataset&&e.target.dataset.a; if(!a) return; m.remove();
+    const sec=(await nbSecs(AS_NB)).find(s=>s.id===id); if(!sec) return;
+    if(a==='ren'){ const n=await asAskText('Section name',sec.name); if(n) await asSecPatch(id,{name:n.slice(0,60)}); }
+    else if(a==='col') await asSecPatch(id,{color:NB_PAL[(NB_PAL.indexOf(sec.color)+1)%NB_PAL.length]});
+    else if(a==='l'||a==='r') await asMove(id,a==='l'?-1:1);
+    else if(a==='del') return asDelSec(id);
+    asTabs();
+  };
+  document.body.appendChild(m);
+  setTimeout(()=>document.addEventListener('pointerdown',function f(e){ if(!m.contains(e.target)){ m.remove(); document.removeEventListener('pointerdown',f,true); } },true),0);
+}
+$('tabs').addEventListener('click',e=>{
+  const b=e.target.closest('button'); if(!b) return;
+  if(b.id==='tbHome'){ if(history.state&&history.state.ed) history.back(); else showLib(); return; }
+  if(b.id==='tbAdd'){ asAddSec(); return; }
+  const id=b.dataset.sec; if(!id) return;
+  if(id===AS_SEC){ const r=b.getBoundingClientRect(); asTabMenu(id,r.left,r.bottom); } else asGo(AS_NB,id);
+});
+$('tabs').addEventListener('contextmenu',e=>{ const b=e.target.closest('[data-sec]'); if(!b) return; e.preventDefault(); const r=b.getBoundingClientRect(); asTabMenu(b.dataset.sec,r.left,r.bottom); });
+
+// ---- V88: storage limit, warnings, persistent storage ----
+const CAPS=[250,500,1024,2048,5120].map(m=>m*1048576), CAP_DEFAULT=1024*1048576;
+var asLvl=0, asChkAt=0;
+async function asStorageInfo(){
+  const set=(await asTx(['settings'],'readonly',s=>s.get('storage')))||{key:'storage'};
+  const cap=set.cap||CAP_DEFAULT;
+  const secs=(await asTx(['sections'],'readonly',s=>s.getAll()))||[];
+  const used=secs.reduce((a,x)=>a+(x.size||0),0);
+  let est=null, persisted=false;
+  try{ est=await navigator.storage.estimate(); }catch(_){}
+  try{ persisted=await navigator.storage.persisted(); }catch(_){}
+  return {set,cap,used,pct:used/cap*100,quota:est?est.quota:0,usage:est?est.usage:0,persisted};
+}
+async function asPersist(){
+  let ok=false;
+  try{ if(navigator.storage&&navigator.storage.persist) ok=(await navigator.storage.persisted())||(await navigator.storage.persist()); }catch(_){}
+  const set=(await asTx(['settings'],'readonly',s=>s.get('storage')))||{key:'storage'};
+  await asTx(['settings'],'readwrite',s=>s.put({...set,key:'storage',persistAsked:true}));
+  return ok;
+}
+const ST_MSG=['','Your notebooks are using over 80% of the space you chose. Open the bell in the Library for details.','Space is almost full. Back up and delete old notebooks, or choose more space (bell in the Library).','You reached the space you chose. Your work is still being saved — back up and free some space.'];
+async function asAfterFlush(){   // after a successful save: ask the browser for persistent storage once, and warn about the limit
+  try{
+    const now=Date.now(); if(now-asChkAt<30000) return; asChkAt=now;
+    const si=await asStorageInfo();
+    if(!si.set.persistAsked) asPersist();
+    const lvl=si.pct>=100?3:si.pct>=95?2:si.pct>=80?1:0;
+    if(lvl>asLvl||lvl===3) $('st').textContent=ST_MSG[lvl];
+    asLvl=lvl;
+  }catch(_){}
+}
+
+// ---- V88: backup. A stored section -> .inkdown (same layout as Save project); a notebook -> one ZIP of its sections ----
+const safeName=t=>String(t).replace(/[\\/:*?"<>|]+/g,'_').trim()||'notes';
+function dlBlob(blob,name){ const a=document.createElement('a'), u=URL.createObjectURL(blob); a.href=u; a.download=name; document.body.appendChild(a); a.click(); a.remove(); setTimeout(()=>URL.revokeObjectURL(u),10000); }
+async function asSectionZip(sec){
+  const zip=new JSZip(), man={app:'inkdown',version:1,name:safeName(sec.name),zoom:sec.zoom,active:sec.active,pdf:null,pages:[]};
+  if(sec.pdf){ const a=await asTx(['assets'],'readonly',s=>s.get(sec.pdf.id)); if(a){ zip.file('pdf/source.pdf',a.blob,{compression:'STORE'}); man.pdf={file:'pdf/source.pdf',name:sec.pdf.name}; } }
+  for(let i=0;i<sec.pages.length;i++){
+    const p=sec.pages[i], r=await asTx(['pages'],'readonly',s=>s.get(p.id)); if(!r) throw new Error('Missing page in "'+sec.name+'"');
+    const data=JSON.parse(r.json); let k=0;
+    for(const it of data.items||[]) if(it.t==='image'){
+      const ext=it.file.split('.').pop(), a=await asTx(['assets'],'readonly',s=>s.get(it.file.split('.')[0])); if(!a) throw new Error('Missing image in "'+sec.name+'"');
+      const f='images/p'+(i+1)+'_'+(++k)+'.'+ext; zip.file(f,a.blob,{compression:'STORE'}); it.file=f;
+    }
+    const pn='pages/p'+String(i+1).padStart(3,'0')+'.json'; zip.file(pn,JSON.stringify(data));
+    man.pages.push({w:p.w,h:p.h,pdfPage:p.pdfPage,data:pn});
+  }
+  zip.file('manifest.json',JSON.stringify(man)); return zip;
+}
+var asExporting=false;
+async function asExportNb(id,cloud){
+  if(asExporting) return;
+  if(!window.JSZip){ $('st').textContent='Export failed: ZIP library not loaded (check internet).'; return; }
+  asExporting=true;
+  try{
+    if(cloud){ await clCfg(); if(clActive()==='gd') await gdToken(); }   // sign-in popup must start straight from the click
+    await asSettle();
+    const nb=await asTx(['notebooks'],'readonly',s=>s.get(id)), list=await nbSecs(id), out=new JSZip(), meta=[];
+    for(let i=0;i<list.length;i++){
+      $('st').textContent='Exporting '+nb.name+' — section '+(i+1)+' / '+list.length+'…';
+      const sec=await asTx(['sections'],'readonly',s=>s.get(list[i].id)); if(!sec||!sec.pages||!sec.pages.length) continue;
+      const fn=String(meta.length+1).padStart(2,'0')+' '+safeName(sec.name)+'.inkdown';
+      out.file(fn,await (await asSectionZip(sec)).generateAsync({type:'uint8array',compression:'DEFLATE',compressionOptions:{level:6}}),{compression:'STORE'});
+      meta.push({file:fn,name:sec.name,color:sec.color});
+    }
+    if(!meta.length){ $('st').textContent='Nothing to export yet — this notebook has no saved pages.'; return; }
+    out.file('notebook.json',JSON.stringify({app:'inkdown-notebook',version:1,name:nb.name,color:nb.color,sections:meta}));
+    $('st').textContent='Compressing…';
+    const blob=await out.generateAsync({type:'blob',compression:'STORE',mimeType:'application/octet-stream'});
+    if(cloud) await clPutNb(id,nb,blob); else dlBlob(blob,safeName(nb.name)+'.inkdown');
+    await asTx(['notebooks'],'readwrite',s=>{ const g=s.get(id); g.onsuccess=()=>{ s.put({...g.result,lastBackup:Date.now()}); }; });
+    $('st').textContent=(cloud?'Uploaded to cloud: ':'Backup saved: ')+safeName(nb.name)+(cloud?' (':'.inkdown (')+mb(blob.size)+')';
+  }catch(err){ console.error(err); $('st').textContent=(cloud?'Upload failed: ':'Export failed: ')+(cloud?clErrText(err):(err&&err.message||err)); }
+  finally{ asExporting=false; if(!$('home').hidden) homeRender(); }
+}
+// restore a notebook ZIP made above: new notebook, one section per .inkdown
+async function asImportNbZip(f){
+  if(!window.JSZip){ $('st').textContent='Import failed: ZIP library not loaded (check internet).'; return; }
+  try{
+    const zip=await JSZip.loadAsync(f), mj=zip.file('notebook.json');
+    if(!mj) throw new Error('not a notebook backup (notebook.json missing).');
+    const m=JSON.parse(await mj.async('string'));
+    await asNewNb(m.name||f.name.replace(/\.(zip|inkdown)$/i,''));
+    let first=true;
+    for(const e of m.sections||[]){
+      const zf=zip.file(e.file); if(!zf) continue;
+      $('st').textContent='Restoring '+e.name+'…';
+      if(first){ await asPrep(e.name||'Section'); first=false; } else await asAddSec(e.name||'Section');   // after the first one always a fresh section, even if the previous was blank
+      await openProjectFile(new File([await zf.async('uint8array')],e.file));
+      await asSettle();
+      if(e.color) await asSecPatch(AS_SEC,{color:e.color});
+    }
+    asTabSig=''; await asTabs(); $('st').textContent='Restored notebook "'+(m.name||'')+'".'; showLib();
+  }catch(err){ console.error(err); $('st').textContent='Import failed: '+(err&&err.message||err); }
+}
+
+// ---- bell: plain-language notice about where/how notebooks are saved + the space setting ----
+async function asInfoOpen(){
+  let si=await asStorageInfo();
+  await asTx(['settings'],'readwrite',st=>st.put({...si.set,key:'storage',seenInfo:true}));
+  const d=document.createElement('div'); d.id='dlg';
+  const use=x=>'You are using '+mb(x.used)+' of the '+mb(x.cap)+' you chose ('+Math.min(100,Math.round(x.pct))+'%).';
+  d.innerHTML='<div class="box ifo" style="width:min(420px,90vw);max-height:82vh;overflow:auto">'+
+    '<div style="display:flex;align-items:center;gap:8px"><b style="flex:1;font-size:16px">About your notebooks</b><button id="ifSet" title="Settings" aria-label="Settings">⚙\uFE0E</button></div>'+
+    (si.pct>=80?'<p class="'+(si.pct>=95?'scrit':'swarn')+'">'+(si.pct>=100?'You have reached the space you chose. Your work is still being saved, but please back up and free some space.':'Your notebooks are using '+Math.round(si.pct)+'% of the space you chose. Please back up and delete old notebooks soon.')+'</p>':'')+
+    '<p><b>Where they are saved.</b> Your notebooks are saved inside this app, on the device you are using right now. They are not sent to the internet and they are not tied to any account.</p>'+
+    '<p><b>How they are saved.</b> Everything you write is saved automatically, so you never need to press Save. The app keeps it in a private space that your browser gives it. If you clear your browser’s data, or this device is reset, your notebooks will be deleted. To keep a safe copy, use the back-up button on a notebook.</p>'+
+    '<p><b>Why there is a space limit.</b> Your device has only so much room. The limit is the amount of space you allow your notebooks to use. When they get close to it, the app warns you, so you can back up and delete old notebooks before the device runs out of space. Reaching the limit does not stop saving.</p>'+
+    '<p>Click the settings icon ⚙\uFE0E at the top of this window to choose or keep how much space your notebooks may use. A drop-down menu will open there with the choices.</p>'+
+    '<div id="ifPanel" hidden style="margin-top:12px;padding-top:10px;border-top:1px solid var(--bd)"><label>Space for my notebooks<select id="ifCap">'+CAPS.map(c=>'<option value="'+c+'"'+(c===si.cap?' selected':'')+'>'+mb(c)+'</option>').join('')+'</select></label>'+
+    '<div class="sbar" id="ifBar"><i></i></div><small id="ifUse"></small></div>'+
+    '<div class="row"><button id="ifOk" class="on">Got it</button></div></div>';
+  const paint=()=>{ const bar=d.querySelector('#ifBar'); bar.className='sbar'+(si.pct>=95?' crit':si.pct>=80?' warn':''); bar.firstChild.style.width=Math.min(100,si.pct)+'%'; d.querySelector('#ifUse').textContent=use(si); };
+  paint();
+  const close=()=>{ d.remove(); if(!$('home').hidden) homeRender(); };
+  d.addEventListener('click',e=>{ if(e.target===d||e.target.id==='ifOk') close(); else if(e.target.closest('#ifSet')) d.querySelector('#ifPanel').hidden=!d.querySelector('#ifPanel').hidden; });
+  d.querySelector('#ifCap').addEventListener('change',async e=>{
+    await asTx(['settings'],'readwrite',st=>st.put({...si.set,key:'storage',cap:+e.target.value,seenInfo:true}));
+    asChkAt=0; asLvl=0; si=await asStorageInfo(); paint();
+  });
+  document.body.appendChild(d);
+}
+var homeOpen=new Set();   // notebooks whose section list is expanded on the Library
+const LIC=(p=>Object.fromEntries(Object.entries(p).map(([k,v])=>[k,'<svg class="ic" viewBox="0 0 24 24" aria-hidden="true">'+v+'</svg>'])))({
+  plus:'<path d="M12 5v14M5 12h14"/>',
+  folder:'<path d="M3 7a2 2 0 012-2h4l2 2h8a2 2 0 012 2v8a2 2 0 01-2 2H5a2 2 0 01-2-2z"/>',
+  back:'<path d="M19 12H5M11 6l-6 6 6 6"/>',
+  download:'<path d="M12 4v11M7 11l5 5 5-5M5 20h14"/>',
+  edit:'<path d="M4 20h4L19 9a2.8 2.8 0 00-4-4L4 16z"/><path d="M13.5 6.5l4 4"/>',
+  trash:'<path d="M4 7h16M10 11v6M14 11v6M6 7l1 12a2 2 0 002 2h6a2 2 0 002-2l1-12M9 7V4h6v3"/>',
+  chev:'<path d="M6 9l6 6 6-6"/>',
+  more:'<circle cx="5" cy="12" r="1.5"/><circle cx="12" cy="12" r="1.5"/><circle cx="19" cy="12" r="1.5"/>',
+  cloud:'<path d="M7 18a4 4 0 010-8 5 5 0 019.6-1A4.5 4.5 0 0117 18z"/>'
+});
+/* ===== CLOUD: user's own Cloudflare R2 bucket. The browser signs S3 requests itself (AWS SigV4); no server of ours is involved. ===== */
+var CL=null;
+const clEnc=s=>encodeURIComponent(s).replace(/[!'()*]/g,c=>'%'+c.charCodeAt(0).toString(16).toUpperCase());
+const clHex=b=>[...new Uint8Array(b)].map(x=>x.toString(16).padStart(2,'0')).join('');
+const clTE=new TextEncoder();
+const clSha=async s=>clHex(await crypto.subtle.digest('SHA-256',clTE.encode(s)));
+async function clHmac(key,msg){ const k=await crypto.subtle.importKey('raw',key,{name:'HMAC',hash:'SHA-256'},false,['sign']); return new Uint8Array(await crypto.subtle.sign('HMAC',k,clTE.encode(msg))); }
+var GD=null, CP=null, GDT={}, clLoaded=false;
+const GD_CLIENT_ID='';   // paste your Google OAuth Client ID here (or leave empty: the Drive setup screen then asks for it)
+async function clCfg(){
+  if(!clLoaded){ try{
+    CL=(await asTx(['settings'],'readonly',s=>s.get('cloud')))||null;
+    GD=(await asTx(['settings'],'readonly',s=>s.get('gdrive')))||null;
+    const p=await asTx(['settings'],'readonly',s=>s.get('cloudProv')); CP=p?p.p:null; clLoaded=true;
+  }catch(_){} }
+  return CL||GD;
+}
+const clActive=()=>CP==='gd'&&GD&&GD.on?'gd':CP==='r2'&&CL?'r2':CL?'r2':(GD&&GD.on?'gd':null);
+const clSetProv=p=>{ CP=p; return asTx(['settings'],'readwrite',s=>s.put({key:'cloudProv',p})); };
+async function clSign(method,key,query){
+  const c=CL, host=c.acct+'.r2.cloudflarestorage.com', amz=new Date().toISOString().replace(/[:-]|\.\d{3}/g,''), day=amz.slice(0,8);
+  const uri='/'+c.bucket+(key?'/'+key.split('/').map(clEnc).join('/'):'');
+  const qs=Object.keys(query||{}).sort().map(k=>clEnc(k)+'='+clEnc(query[k])).join('&');
+  const canon=method+'\n'+uri+'\n'+qs+'\nhost:'+host+'\nx-amz-content-sha256:UNSIGNED-PAYLOAD\nx-amz-date:'+amz+'\n\nhost;x-amz-content-sha256;x-amz-date\nUNSIGNED-PAYLOAD';
+  const scope=day+'/auto/s3/aws4_request', sts='AWS4-HMAC-SHA256\n'+amz+'\n'+scope+'\n'+await clSha(canon);
+  let k=await clHmac(clTE.encode('AWS4'+c.sk),day); k=await clHmac(k,'auto'); k=await clHmac(k,'s3'); k=await clHmac(k,'aws4_request');
+  return {url:'https://'+host+uri+(qs?'?'+qs:''),headers:{'x-amz-content-sha256':'UNSIGNED-PAYLOAD','x-amz-date':amz,
+    'Authorization':'AWS4-HMAC-SHA256 Credential='+c.ak+'/'+scope+', SignedHeaders=host;x-amz-content-sha256;x-amz-date, Signature='+clHex(await clHmac(k,sts))}};
+}
+const clFetch=async(method,key,query)=>{ const s=await clSign(method,key,query); return fetch(s.url,{method,headers:s.headers}); };
+function clMsg(status,txt){
+  if(status===403) return 'Access denied. Check the Access Key ID, Secret Access Key and that the token has Object Read & Write for this bucket.';
+  if(status===404) return 'Bucket not found. Check the bucket name and Account ID.';
+  if(!status) return 'Cannot reach R2. Check the Account ID, your internet, and that the bucket has the CORS rule for this app address.';
+  return 'Cloud error '+status+(txt?': '+String(txt).replace(/<[^>]+>/g,' ').trim().slice(0,120):'');
+}
+const clErrText=(e,p)=>e instanceof TypeError?((p||clActive())==='gd'?'Cannot reach Google. Check your internet.':clMsg(0)):(e&&e.message||String(e));
+async function r2List(){
+  const out=[]; let tok='';
+  for(let i=0;i<20;i++){
+    const q={'list-type':'2',prefix:'inkdown/'}; if(tok) q['continuation-token']=tok;
+    const r=await clFetch('GET','',q), t=await r.text(); if(!r.ok) throw new Error(clMsg(r.status,t));
+    const x=new DOMParser().parseFromString(t,'application/xml');
+    x.querySelectorAll('Contents').forEach(e=>{
+      const k=e.querySelector('Key').textContent, m=k.match(/^inkdown\/(.*)__(.+)\.inkdown$/); if(!m) return;
+      out.push({key:k,name:m[1],id:m[2],size:+(e.querySelector('Size')||{}).textContent||0,mod:Date.parse((e.querySelector('LastModified')||{}).textContent)||0});
+    });
+    const tr=x.querySelector('IsTruncated'), nx=x.querySelector('NextContinuationToken');
+    tok=(tr&&tr.textContent==='true'&&nx)?nx.textContent:''; if(!tok) break;
+  }
+  return out.sort((a,b)=>b.mod-a.mod);
+}
+async function clPut(key,blob,onp){
+  const s=await clSign('PUT',key);
+  return new Promise((res,rej)=>{ const x=new XMLHttpRequest(); x.open('PUT',s.url); for(const k in s.headers) x.setRequestHeader(k,s.headers[k]);
+    x.upload.onprogress=e=>{ if(e.lengthComputable&&onp) onp(e.loaded/e.total); };
+    x.onload=()=>x.status>=200&&x.status<300?res():rej(new Error(clMsg(x.status,x.responseText)));
+    x.onerror=()=>rej(new Error(clMsg(0))); x.send(blob); });
+}
+async function clGetBlob(key){ const r=await clFetch('GET',key); if(!r.ok) throw new Error(clMsg(r.status,await r.text())); return r.blob(); }
+async function clPutNb(id,nb,blob){
+  await clCfg(); const pv=clActive(); if(!pv) throw new Error('Cloud storage is not set up.');
+  const onp=p=>{ $('st').textContent='Uploading '+nb.name+'… '+Math.round(p*100)+'%'; };
+  if(pv==='gd') return gdPut(id,nb.name,blob,onp);
+  const key='inkdown/'+safeName(nb.name)+'__'+id+'.inkdown';
+  await clPut(key,blob,onp);
+  try{ for(const o of await r2List()) if(o.id===id&&o.key!==key) await clFetch('DELETE',o.key); }catch(_){}   // a renamed notebook replaces its old cloud copy
+}
+/* ---- Google Drive: sign-in via Google Identity Services, files kept in the hidden appDataFolder (only this app can see them) ---- */
+const GD_SCOPE='https://www.googleapis.com/auth/drive.appdata';
+function gdLoad(){ if(window.google&&google.accounts&&google.accounts.oauth2) return Promise.resolve(); return new Promise((res,rej)=>{ const s=document.createElement('script'); s.src='https://accounts.google.com/gsi/client'; s.onload=res; s.onerror=()=>rej(new Error('Could not load Google sign-in. Check your internet.')); document.head.appendChild(s); }); }
+function gdToken(){
+  if(GDT.tok&&Date.now()<GDT.exp-60000) return Promise.resolve(GDT.tok);
+  return gdLoad().then(()=>new Promise((res,rej)=>{
+    const cid=GD_CLIENT_ID||(GD&&GD.clientId); if(!cid) return rej(new Error('Google Client ID is missing.'));
+    const tc=google.accounts.oauth2.initTokenClient({client_id:cid,scope:GD_SCOPE,
+      callback:r=>{ if(r.error) return rej(new Error(r.error==='access_denied'?'Sign-in was cancelled or access was denied.':'Google sign-in failed: '+r.error)); GDT.tok=r.access_token; GDT.exp=Date.now()+(+r.expires_in||3600)*1000; res(GDT.tok); },
+      error_callback:e=>rej(new Error(e&&e.type==='popup_closed'?'The sign-in window was closed.':e&&e.type==='popup_failed_to_open'?'The sign-in popup was blocked. Allow popups for this page and try again.':'Google sign-in failed.'))});
+    tc.requestAccessToken({prompt:GD&&GD.on?'':'consent'});
+  }));
+}
+async function gdApi(url,opt,retry){
+  const t=await gdToken(), r=await fetch(url,{...(opt||{}),headers:{...((opt&&opt.headers)||{}),Authorization:'Bearer '+t}});
+  if(r.status===401&&!retry){ GDT={}; return gdApi(url,opt,1); }
+  return r;
+}
+async function gdErr(r){ let t=''; try{ t=await r.text(); }catch(_){} if(/storageQuotaExceeded/.test(t)) return 'Your Google Drive is full.'; if(r.status===401||r.status===403) return 'Google Drive denied access. Disconnect and sign in again.'; return 'Google Drive error '+r.status; }
+async function gdList(){
+  const out=[]; let pt='';
+  for(let i=0;i<20;i++){
+    const u='https://www.googleapis.com/drive/v3/files?spaces=appDataFolder&pageSize=1000&fields='+encodeURIComponent('nextPageToken,files(id,name,size,modifiedTime)')+'&q='+encodeURIComponent('trashed=false')+(pt?'&pageToken='+encodeURIComponent(pt):'');
+    const r=await gdApi(u); if(!r.ok) throw new Error(await gdErr(r));
+    const j=await r.json();
+    (j.files||[]).forEach(f=>{ const m=String(f.name).match(/^(.*)__(.+)\.inkdown$/); if(m) out.push({key:f.id,name:m[1],id:m[2],size:+f.size||0,mod:Date.parse(f.modifiedTime)||0}); });
+    pt=j.nextPageToken||''; if(!pt) break;
+  }
+  return out.sort((a,b)=>b.mod-a.mod);
+}
+async function gdPut(id,name,blob,onp){
+  const fname=safeName(name)+'__'+id+'.inkdown', ex=(await gdList()).filter(o=>o.id===id);
+  const meta=ex.length?{name:fname}:{name:fname,parents:['appDataFolder']};
+  const r=await gdApi('https://www.googleapis.com/upload/drive/v3/files'+(ex.length?'/'+ex[0].key:'')+'?uploadType=resumable&fields=id',{method:ex.length?'PATCH':'POST',
+    headers:{'Content-Type':'application/json; charset=UTF-8','X-Upload-Content-Type':'application/octet-stream','X-Upload-Content-Length':String(blob.size)},body:JSON.stringify(meta)});
+  if(!r.ok) throw new Error(await gdErr(r));
+  const loc=r.headers.get('Location'); if(!loc) throw new Error('Google Drive did not return an upload address.');
+  await new Promise((res,rej)=>{ const x=new XMLHttpRequest(); x.open('PUT',loc);
+    x.upload.onprogress=e=>{ if(e.lengthComputable&&onp) onp(e.loaded/e.total); };
+    x.onload=()=>x.status>=200&&x.status<300?res():rej(new Error(/storageQuotaExceeded/.test(x.responseText)?'Your Google Drive is full.':'Google Drive upload failed ('+x.status+').'));
+    x.onerror=()=>rej(new Error('Upload failed. Check your internet.')); x.send(blob); });
+  for(const o of ex.slice(1)){ try{ await gdApi('https://www.googleapis.com/drive/v3/files/'+o.key,{method:'DELETE'}); }catch(_){} }   // keep exactly one copy per notebook
+}
+async function gdGet(fileId){ const r=await gdApi('https://www.googleapis.com/drive/v3/files/'+fileId+'?alt=media'); if(!r.ok) throw new Error(await gdErr(r)); return r.blob(); }
+const clList=()=>clActive()==='gd'?gdList():r2List();
+const clGet=o=>clActive()==='gd'?gdGet(o.key):clGetBlob(o.key);
+async function clDel(o){
+  if(clActive()==='gd'){ const r=await gdApi('https://www.googleapis.com/drive/v3/files/'+o.key,{method:'DELETE'}); if(!r.ok&&r.status!==204) throw new Error(await gdErr(r)); return; }
+  const x=await clFetch('DELETE',o.key); if(!x.ok&&x.status!==204) throw new Error(clMsg(x.status,await x.text()));
+}
+async function clOpen(){
+  await clCfg();
+  const d=document.createElement('div'); d.id='dlg'; document.body.appendChild(d);
+  const close=()=>{ d.remove(); if(!$('home').hidden) homeRender(); };
+  const origin=(location.origin&&location.origin!=='null')?location.origin:'';
+  const cors=JSON.stringify([{AllowedOrigins:[origin||'https://YOUR-APP-ADDRESS'],AllowedMethods:['GET','PUT','DELETE','HEAD'],AllowedHeaders:['*'],ExposeHeaders:['ETag'],MaxAgeSeconds:3600}],null,2);
+  const say=(t,err)=>{ const m=d.querySelector('.clm'); if(m){ m.textContent=t; m.className='clm'+(err?' err':''); } };
+  let items=[];
+  const setup=()=>{
+    const c=CL||{};
+    d.innerHTML='<div class="box ifo clb"><h2>Cloud storage · Cloudflare R2</h2>'+
+      '<p>Back up notebooks to your own free Cloudflare R2 bucket. Your keys stay on this device, and files go straight from your browser to your bucket.</p>'+
+      (origin?'':'<p style="color:#dc2626">This page is not opened from a web address (https://…), so Cloudflare will block it. Open the app from a website to use cloud storage.</p>')+
+      '<details><summary>How to set up (about 5 minutes)</summary><ol style="padding-left:18px;margin:8px 0">'+
+      '<li>Create a free account at dash.cloudflare.com and open <b>R2 Object Storage</b>.</li>'+
+      '<li>Create a bucket with <b>Standard</b> storage.</li>'+
+      '<li>Open the bucket → <b>Settings → CORS Policy</b> and add the rule below.</li>'+
+      '<li>On the R2 overview page open <b>API → Manage API tokens</b> and create a token with <b>Object Read &amp; Write</b> for this bucket only. Copy the Access Key ID and Secret Access Key. The Account ID is also on the R2 overview page.</li></ol>'+
+      '<pre>'+esc(cors)+'</pre><button data-a="copy">Copy CORS rule</button><p style="font-size:12px">Menu names may differ slightly in the Cloudflare dashboard.</p></details>'+
+      '<label>Account ID<input id="clA" autocomplete="off" value="'+esc(c.acct||'')+'"></label>'+
+      '<label>Access Key ID<input id="clK" autocomplete="off" value="'+esc(c.ak||'')+'"></label>'+
+      '<label>Secret Access Key<input id="clS" type="password" autocomplete="off" placeholder="'+(c.sk?'saved — type to replace':'')+'"></label>'+
+      '<label>Bucket name<input id="clB" autocomplete="off" value="'+esc(c.bucket||'')+'"></label>'+
+      '<div class="clm"></div><div class="row"><button data-a="pick">Back</button><button data-a="close">Cancel</button><button data-a="save" class="on">Save &amp; test</button></div></div>';
+  };
+  const paint=()=>{
+    const L=d.querySelector('#clL'); if(!L) return;
+    L.innerHTML=items.length?items.map((o,i)=>'<div class="clr"><div><b>'+esc(o.name)+'</b><small>'+mb(o.size)+' · '+new Date(o.mod).toLocaleDateString()+'</small></div><button data-a="rs" data-i="'+i+'">Restore</button><button data-a="dl" data-i="'+i+'">Download</button><button data-a="rm" data-i="'+i+'">Delete</button></div>').join(''):'<p>No notebooks in the cloud yet. Open a notebook card’s ⋯ menu and choose <b>Upload to cloud</b>.</p>';
+  };
+  const show=async()=>{
+    d.innerHTML='<div class="box ifo clb"><h2>Cloud storage</h2><p style="margin-top:4px">'+(clActive()==='gd'?'Connected to <b>Google Drive</b> (private app folder)':'Connected to bucket <b>'+esc(CL.bucket)+'</b>')+'</p><div id="clL"><p>Loading…</p></div><div class="clm"></div><div class="row"><button data-a="pick">Switch</button><button data-a="dis">Disconnect</button><button data-a="refresh">Refresh</button><button data-a="close" class="on">Close</button></div></div>';
+    try{ items=await clList(); paint(); }catch(err){ const L=d.querySelector('#clL'); if(L) L.innerHTML=''; say(clErrText(err),1); }
+  };
+  d.addEventListener('pointerdown',e=>{ if(e.target===d) close(); });
+  d.addEventListener('click',async e=>{
+    const b=e.target.closest('[data-a]'); if(!b) return; const a=b.dataset.a, o=items[+b.dataset.i];
+    if(a==='close') close();
+    else if(a==='refresh') show();
+    else if(a==='pick') pick();
+    else if(a==='r2'){ if(CL){ await clSetProv('r2'); show(); } else setup(); }
+    else if(a==='gd'){ if(GD&&GD.on){ await clSetProv('gd'); show(); } else gdSetup(); }
+    else if(a==='gsign'){
+      const inp=d.querySelector('#clG'), cid=GD_CLIENT_ID||(inp?inp.value.trim():'');
+      if(!cid){ say('Enter the Google Client ID first.',1); return; }
+      if(!origin){ say('Open the app from a web address (https://…) to use Google sign-in.',1); return; }
+      const prev=GD; GD={key:'gdrive',clientId:GD_CLIENT_ID?'':cid,on:false}; GDT={}; say('Opening Google sign-in…');
+      try{ await gdToken(); await gdList(); GD.on=true; await asTx(['settings'],'readwrite',s=>s.put(GD)); await clSetProv('gd'); await show(); }
+      catch(err){ GD=prev; say(clErrText(err,'gd'),1); }
+    }
+    else if(a==='copy'){ try{ await navigator.clipboard.writeText(cors); b.textContent='Copied ✓'; }catch(_){ b.textContent='Select the text above and copy'; } }
+    else if(a==='dis'){ const r=await asDlg('<div>Disconnect '+(clActive()==='gd'?'Google Drive':'cloud storage')+'? Files already stored there are not deleted.</div>',[{id:'cancel',label:'Cancel'},{id:'ok',label:'Disconnect',on:1}]); if(r.id!=='ok') return;
+      if(clActive()==='gd'){ try{ if(GDT.tok&&window.google) google.accounts.oauth2.revoke(GDT.tok); }catch(_){} await asTx(['settings'],'readwrite',s=>s.delete('gdrive')); GD=null; GDT={}; }
+      else{ await asTx(['settings'],'readwrite',s=>s.delete('cloud')); CL=null; }
+      CP=null; await asTx(['settings'],'readwrite',s=>s.delete('cloudProv')); clActive()?(await clSetProv(clActive()),show()):pick(); }
+    else if(a==='save'){
+      const g=id=>d.querySelector(id).value.trim(), prev=CL||{};
+      const n={key:'cloud',acct:g('#clA').replace(/^https?:\/\//,'').split('.')[0],ak:g('#clK'),sk:g('#clS')||prev.sk||'',bucket:g('#clB')};
+      if(!n.acct||!n.ak||!n.sk||!n.bucket){ say('Fill in all four fields.',1); return; }
+      say('Testing connection…'); CL=n;
+      try{ const r=await clFetch('GET','',{'list-type':'2','max-keys':'1'}), t=await r.text(); if(!r.ok) throw new Error(clMsg(r.status,t)); await asTx(['settings'],'readwrite',s=>s.put(n)); await clSetProv('r2'); await show(); }
+      catch(err){ CL=prev.acct?prev:null; say(clErrText(err,'r2'),1); }
+    }
+    else if(a==='dl'&&o){ say('Downloading…'); try{ dlBlob(await clGet(o),safeName(o.name)+'.inkdown'); say('Downloaded.'); }catch(err){ say(clErrText(err),1); } }
+    else if(a==='rm'&&o){ const r=await asDlg('<div>Delete “'+esc(o.name)+'” from the cloud? This cannot be undone.</div>',[{id:'cancel',label:'Cancel'},{id:'ok',label:'Delete',on:1,red:1}]); if(r.id!=='ok') return; try{ await clDel(o); items=items.filter(i=>i!==o); paint(); say('Deleted.'); }catch(err){ say(clErrText(err),1); } }
+    else if(a==='rs'&&o){
+      const r=await asDlg('<div>Restore “'+esc(o.name)+'” as a new notebook on this device?</div>',[{id:'cancel',label:'Cancel'},{id:'ok',label:'Restore',on:1}]); if(r.id!=='ok') return;
+      d.remove(); $('st').textContent='Downloading '+o.name+'…';
+      try{ await asOpenAny(new File([await clGet(o)],safeName(o.name)+'.inkdown')); }catch(err){ $('st').textContent='Restore failed: '+clErrText(err); if(!$('home').hidden) homeRender(); }
+    }
+  });
+  const pick=()=>{
+    d.innerHTML='<div class="box ifo clb"><h2>Cloud storage</h2><p>Choose where to back up your notebooks.</p>'+
+      '<div class="clr"><div><b>Google Drive</b><small>15 GB free (shared with Gmail &amp; Photos) · just sign in</small></div><button data-a="gd">'+(GD&&GD.on?'Use':'Set up')+'</button></div>'+
+      '<div class="clr"><div><b>Cloudflare R2</b><small>10 GB free · needs your own bucket</small></div><button data-a="r2">'+(CL?'Use':'Set up')+'</button></div>'+
+      '<div class="row"><button data-a="close" class="on">Close</button></div></div>';
+  };
+  const gdSetup=()=>{
+    gdLoad().catch(()=>{});
+    d.innerHTML='<div class="box ifo clb"><h2>Google Drive</h2><p>Sign in to back up notebooks to a private, hidden app folder in your Google Drive. Only this app can see these files, and they use your Drive storage.</p>'+
+      (origin?'':'<p style="color:#dc2626">This page is not opened from a web address (https://…), so Google sign-in will not work.</p>')+
+      (GD_CLIENT_ID?'':'<label>Google OAuth Client ID<input id="clG" autocomplete="off" placeholder="1234-abc.apps.googleusercontent.com" value="'+esc((GD&&GD.clientId)||'')+'"></label>')+
+      '<div class="clm"></div><div class="row"><button data-a="pick">Back</button><button data-a="gsign" class="on">Sign in with Google</button></div></div>';
+  };
+  if(GD&&GD.on) gdLoad().catch(()=>{});
+  clActive()?show():pick();
+}
+async function homeRender(){
+  const h=$('home');
+  const nbs=((await asTx(['notebooks'],'readonly',s=>s.getAll()))||[]).sort((a,b)=>(b.updated||0)-(a.updated||0));
+  const secs=(await asTx(['sections'],'readonly',s=>s.getAll()))||[];
+  const si=await asStorageInfo(), cls=si.pct>=95?'crit':si.pct>=80?'warn':'';
+  h.innerHTML='<div class="hh"><h1>Library</h1><button id="hInfo" class="bell" aria-label="About your notebooks"><svg viewBox="0 0 24 24"><path d="M18 8a6 6 0 10-12 0c0 7-3 9-3 9h18s-3-2-3-9M13.7 21a2 2 0 01-3.4 0"/></svg>'+((!si.set.seenInfo||si.pct>=80)?'<i class="dot"></i>':'')+'</button><button id="hNew" class="on">'+LIC.plus+'New notebook</button><button id="hOpen">'+LIC.folder+'Open file</button><button id="hCloud">'+LIC.cloud+'Cloud</button>'+(asDetached?'':'<button id="hBack">'+LIC.back+'Back to editor</button>')+'</div>'+
+
+    '<div class="grid">'+nbs.map(n=>{
+      const ss=secs.filter(s=>s.notebookId===n.id).sort((a,b)=>(a.order||0)-(b.order||0)), sz=ss.reduce((a,s)=>a+(s.size||0),0), many=ss.length>1;
+      const list=many?'<div class="secs"><div class="si">'+ss.map(x=>'<div class="sr" data-s="'+x.id+'" data-n="'+n.id+'"><i style="background:'+x.color+'"></i><span>'+esc(x.name)+'</span><small>'+(x.pageCount||0)+' p · '+mb(x.size||0)+'</small></div>').join('')+'</div></div>':'';
+      return '<div class="card'+(homeOpen.has(n.id)?' open':'')+'" data-nb="'+n.id+'"><div class="strip" style="background:'+(n.color||AS_COLOR)+'"></div><div class="acts"><button data-m="'+n.id+'" title="Menu" aria-label="Menu" aria-haspopup="true">'+LIC.more+'</button></div>'+
+        '<div class="bd"><b>'+esc(n.name)+'</b><small>'+ss.length+' section'+(ss.length===1?'':'s')+' · '+mb(sz)+'<br>Edited '+new Date(n.updated||0).toLocaleDateString()+'</small><br>'+(!sz?'':!n.lastBackup?'<span class="bk red">Not backed up</span>':n.lastBackup<(n.updated||0)?'<span class="bk amber">Changes not backed up</span>':'<span class="bk green">Backed up '+new Date(n.lastBackup).toLocaleDateString()+'</span>')+'</div>'+(many?'<button class="exp" data-e="'+n.id+'" title="Show sections" aria-label="Show sections">'+LIC.chev+'</button>':'')+list+'</div>';
+    }).join('')+'</div>';
+}
+$('home').addEventListener('click',async e=>{
+  const t=e.target, b=t.closest('button');
+  const cm=$('cmenu'); if(cm){ const same=b&&b.dataset.m&&cm.dataset.for===b.dataset.m; cm.remove(); if(same||(!cm.contains(t)&&!(b&&b.dataset.m))) return; }
+  if(b&&b.dataset.m){ const id=b.dataset.m, r=b.getBoundingClientRect(), m=document.createElement('div'); m.id='cmenu'; m.dataset.for=id;
+    m.innerHTML='<button data-c="'+id+'">'+LIC.cloud+'Upload to cloud</button><button data-x="'+id+'">'+LIC.download+'Download backup</button><button data-r="'+id+'">'+LIC.edit+'Rename</button><button data-d="'+id+'">'+LIC.trash+'Delete</button>';
+    $('home').appendChild(m); m.style.top=Math.min(r.bottom+4,innerHeight-m.offsetHeight-8)+'px'; m.style.left=Math.max(8,Math.min(r.right-m.offsetWidth,innerWidth-m.offsetWidth-8))+'px'; return; }
+  if(b&&b.id==='hNew'){ const n=await asAskText('New notebook name',''); if(n===null) return; await asNewNb(n.slice(0,60)||undefined); return; }
+  if(b&&b.id==='hOpen'){ $('homeFile').click(); return; }
+  if(b&&b.id==='hCloud'){ clOpen(); return; }
+  if(b&&b.dataset.c){ await clCfg(); if(!clActive()) clOpen(); else asExportNb(b.dataset.c,true); return; }
+  if(b&&b.id==='hBack'){ hideLib(); return; }
+  if(b&&b.id==='hInfo'){ asInfoOpen(); return; }
+  if(b&&b.dataset.e){ const id=b.dataset.e, c=b.closest('.card'); if(homeOpen.has(id)) homeOpen.delete(id); else homeOpen.add(id); c.classList.toggle('open',homeOpen.has(id)); return; }
+  const sr=t.closest('[data-s]'); if(sr){ await asGo(sr.dataset.n,sr.dataset.s); return; }
+  if(b&&b.dataset.x){ asExportNb(b.dataset.x); return; }
+  if(b&&b.dataset.d){ asDelNb(b.dataset.d); return; }
+  if(b&&b.dataset.r){ const id=b.dataset.r, nb=(await asTx(['notebooks'],'readonly',s=>s.get(id))); const n=await asAskText('Notebook name',nb?nb.name:''); if(n){ await asTx(['notebooks'],'readwrite',s=>s.put({...nb,name:n.slice(0,60)})); asTabSig=''; asTabs(); homeRender(); } return; }
+  const c=t.closest('.card'); if(!c) return;
+  if(!t.closest('.strip')){ const eb=c.querySelector('.exp'); if(eb){ const id=eb.dataset.e; if(homeOpen.has(id)) homeOpen.delete(id); else homeOpen.add(id); c.classList.toggle('open',homeOpen.has(id)); return; } }
+  const id=c.dataset.nb, nb=await asTx(['notebooks'],'readonly',s=>s.get(id)), list=await nbSecs(id);
+  const sec=list.find(s=>s.id===nb.lastSec)||list[0];
+  await asGo(id,sec?sec.id:'s'+asUid());
+});
+
+// ---- toolbar popup: notebooks + sections of the open notebook + Back to library ----
+async function libPopRender(){
+  const el=$('libPop');
+  const nbs=((await asTx(['notebooks'],'readonly',s=>s.getAll()))||[]).sort((a,b)=>(b.updated||0)-(a.updated||0));
+  const all=(await asTx(['sections'],'readonly',s=>s.getAll()))||[];
+  const secs=all.filter(x=>x.notebookId===AS_NB).sort((a,b)=>(a.order||0)-(b.order||0));
+  const cur=nbs.find(n=>n.id===AS_NB);
+  el.innerHTML='<div class="lpc"><h3>Notebooks</h3>'+
+    (nbs.length?nbs.map(n=>'<div class="lpr'+(n.id===AS_NB?' on':'')+'" data-nb="'+n.id+'"><i style="background:'+(n.color||AS_COLOR)+'"></i><span>'+esc(n.name)+'</span><small>'+all.filter(x=>x.notebookId===n.id).length+' sec</small></div>').join(''):'<div class="lpr"><span>No saved notebooks yet</span></div>')+
+    '<hr><h3>Sections'+(cur?' · '+esc(cur.name):'')+'<button id="lpAdd">+ Section</button></h3>'+
+    secs.map(x=>'<div class="lpr'+(x.id===AS_SEC?' on':'')+'" data-sec="'+x.id+'"><i style="background:'+x.color+'"></i><span>'+esc(x.name)+'</span><button data-more="'+x.id+'" title="Rename, color, move, delete">⋯</button></div>').join('')+
+    '<button class="lpb on" id="lpLib">← Back to library</button><button class="lpb" id="lpClose">Close</button></div>';
+}
+async function libPopOpen(){ await asSettle(); await libPopRender(); $('libPop').hidden=false; }
+$('libBtn').addEventListener('click',libPopOpen);
+$('libPop').addEventListener('click',async e=>{
+  const t=e.target, close=()=>{ $('libPop').hidden=true; };
+  if(t===$('libPop')||t.id==='lpClose'){ close(); return; }
+  if(t.id==='lpLib'){ close(); if(history.state&&history.state.ed) history.back(); else showLib(); return; }
+  if(t.id==='lpAdd'){ close(); asAddSec(); return; }
+  if(t.dataset.more){ e.stopPropagation(); const r=t.getBoundingClientRect(); asTabMenu(t.dataset.more,Math.min(r.left,innerWidth-170),r.bottom); return; }
+  const row=t.closest('.lpr'); if(!row) return;
+  if(row.dataset.sec){ close(); if(row.dataset.sec!==AS_SEC) asGo(AS_NB,row.dataset.sec); return; }
+  if(row.dataset.nb){
+    close(); if(row.dataset.nb===AS_NB) return;
+    const nb=await asTx(['notebooks'],'readonly',q=>q.get(row.dataset.nb)), list=await nbSecs(row.dataset.nb);
+    const sec=list.find(x=>x.id===nb.lastSec)||list[0];
+    asGo(row.dataset.nb,sec?sec.id:'s'+asUid());
+  }
+});
+$('home').addEventListener('change',async e=>{ if(e.target.id!=='hCap') return;
+  const set=(await asTx(['settings'],'readonly',s=>s.get('storage')))||{key:'storage'};
+  await asTx(['settings'],'readwrite',s=>s.put({...set,key:'storage',cap:+e.target.value})); asChkAt=0; asLvl=0; homeRender(); });
+$('homeFile').addEventListener('change',e=>{ const f=e.target.files[0]; e.target.value=''; if(f) asOpenAny(f); });
+(async function asBoot(){
+  let sec=null, legacy=null;
+  try{
+    const cu=await asTx(['settings'],'readonly',s=>s.get('current')).catch(()=>null);
+    if(cu){ AS_NB=cu.notebookId; AS_SEC=cu.sectionId; }
+    else if(await asTx(['notebooks'],'readonly',s=>s.count()).catch(()=>0)){ AS_NB='n'+asUid(); AS_SEC='s'+asUid(); }   // data exists but no current section: never reuse nb1/sec1
+    sec=await asTx(['sections'],'readonly',s=>s.get(AS_SEC)).catch(()=>null);
+    if(!(sec&&sec.pages&&sec.pages.length)){ sec=null; legacy=await asLegacy(); }
+    if(!sec&&!legacy){ asHold=false; asTabs(); return; }
+    if(sec){   // V87: continue where you left off, no popup
+      try{ await asLoadSec(sec); asHold=false; asSchedule(500); }
+      catch(err){ console.error(err); $('st').textContent='Restore failed — saved data kept, autosave paused. Reload to retry.'; }
+      asTabs(); return;
+    }
+    const nm=String((sec||legacy).name||'notes').replace(/[<>&]/g,'');
+    const when=new Date(sec?sec.updated:legacy.time).toLocaleString();
+    const d=document.createElement('div'); d.id='dlg';
+    d.innerHTML='<div class="box"><div>Restore your last session “'+nm+'” (autosaved '+when+')?</div><div class="row"><button id="dlgCancel">Discard</button><button id="dlgOk" class="on">Restore</button></div></div>';
+    const release=()=>{ asHold=false; asSchedule(500); };
+    d.querySelector('#dlgOk').onclick=async()=>{
+      d.remove();
+      try{
+        if(sec){
+          asRestoring=true;
+          try{ await openProjectFile({__asZip:asZipFor(sec),name:sec.name}); }finally{ asRestoring=false; }
+          if(pages.length!==sec.pages.length) throw new Error('restore failed');
+          pages.forEach((pg,i)=>{ pg.id=sec.pages[i].id; });
+          const pf=pages.find(p=>p.src);
+          asPdf=(sec.pdf&&pf)?{file:pf.src.file,id:sec.pdf.id}:null;
+        }else{
+          for(let i=0;i<100&&!window.JSZip;i++) await new Promise(r=>setTimeout(r,100));
+          await openProjectFile(new File([legacy.blob],(legacy.name||'notes')+'.inkdown'));
+          indexedDB.deleteDatabase('inkdown-auto');
+        }
+        release();
+      }catch(err){ console.error(err); $('st').textContent='Restore failed — saved data kept, autosave paused. Reload to retry.'; }
+    };
+    d.querySelector('#dlgCancel').onclick=async()=>{
+      d.remove();
+      try{
+        await asTx(['sections','pages','assets'],'readwrite',(secS,pgS,asS)=>{
+          secS.delete(AS_SEC);
+          for(const s of [pgS,asS]){ const q=s.index('sec').getAllKeys(AS_SEC); q.onsuccess=()=>q.result.forEach(k=>s.delete(k)); }
+        });
+        indexedDB.deleteDatabase('inkdown-auto');
+      }catch(_){}
+      release();
+    };
+    document.body.appendChild(d);
+  }catch(_){ asHold=false; }
+})().finally(()=>{ homeRender().then(()=>{ $('home').hidden=false; }).catch(()=>{}); });   // V87: start on the Library
 $('openProj').onclick=async()=>{
   if(projBusy||importing||activeId!==null) return;
-  if(docHasContent()&&!(await askReplace())) return;
   $('projFile').click();
 };
 $('projFile').addEventListener('change',e=>{
   const f=e.target.files[0]; e.target.value='';
-  if(f) openProjectFile(f);
+  if(f) asOpenAny(f);
 });
 
 /* ---------------------------------------------------------------
