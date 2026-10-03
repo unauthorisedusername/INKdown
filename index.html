@@ -3505,73 +3505,23 @@ const LIC=(p=>Object.fromEntries(Object.entries(p).map(([k,v])=>[k,'<svg class="
   more:'<circle cx="5" cy="12" r="1.5"/><circle cx="12" cy="12" r="1.5"/><circle cx="19" cy="12" r="1.5"/>',
   cloud:'<path d="M7 18a4 4 0 010-8 5 5 0 019.6-1A4.5 4.5 0 0117 18z"/>'
 });
-/* ===== CLOUD: user's own Cloudflare R2 bucket. The browser signs S3 requests itself (AWS SigV4); no server of ours is involved. ===== */
-var CL=null;
-const clEnc=s=>encodeURIComponent(s).replace(/[!'()*]/g,c=>'%'+c.charCodeAt(0).toString(16).toUpperCase());
-const clHex=b=>[...new Uint8Array(b)].map(x=>x.toString(16).padStart(2,'0')).join('');
-const clTE=new TextEncoder();
-const clSha=async s=>clHex(await crypto.subtle.digest('SHA-256',clTE.encode(s)));
-async function clHmac(key,msg){ const k=await crypto.subtle.importKey('raw',key,{name:'HMAC',hash:'SHA-256'},false,['sign']); return new Uint8Array(await crypto.subtle.sign('HMAC',k,clTE.encode(msg))); }
-var GD=null, CP=null, GDT={}, clLoaded=false;
-const GD_CLIENT_ID='';   // paste your Google OAuth Client ID here (or leave empty: the Drive setup screen then asks for it)
+/* ===== CLOUD: Google Drive only. Sign in with a Google (Gmail) account; files go straight from the browser to the user's own Drive. ===== */
+var GD=null, GDT={}, clLoaded=false;
+const GD_CLIENT_ID='682008297913-1r0ba3n158s0upvdnb30g4s91i80oer6.apps.googleusercontent.com';   // paste your Google OAuth Client ID here (users then only see the "Sign in with Google" button)
 async function clCfg(){
   if(!clLoaded){ try{
-    CL=(await asTx(['settings'],'readonly',s=>s.get('cloud')))||null;
     GD=(await asTx(['settings'],'readonly',s=>s.get('gdrive')))||null;
-    const p=await asTx(['settings'],'readonly',s=>s.get('cloudProv')); CP=p?p.p:null; clLoaded=true;
+    await asTx(['settings'],'readwrite',s=>{ s.delete('cloud'); s.delete('cloudProv'); });   // remove any old saved storage keys from this device
+    clLoaded=true;
   }catch(_){} }
-  return CL||GD;
+  return GD;
 }
-const clActive=()=>CP==='gd'&&GD&&GD.on?'gd':CP==='r2'&&CL?'r2':CL?'r2':(GD&&GD.on?'gd':null);
-const clSetProv=p=>{ CP=p; return asTx(['settings'],'readwrite',s=>s.put({key:'cloudProv',p})); };
-async function clSign(method,key,query){
-  const c=CL, host=c.acct+'.r2.cloudflarestorage.com', amz=new Date().toISOString().replace(/[:-]|\.\d{3}/g,''), day=amz.slice(0,8);
-  const uri='/'+c.bucket+(key?'/'+key.split('/').map(clEnc).join('/'):'');
-  const qs=Object.keys(query||{}).sort().map(k=>clEnc(k)+'='+clEnc(query[k])).join('&');
-  const canon=method+'\n'+uri+'\n'+qs+'\nhost:'+host+'\nx-amz-content-sha256:UNSIGNED-PAYLOAD\nx-amz-date:'+amz+'\n\nhost;x-amz-content-sha256;x-amz-date\nUNSIGNED-PAYLOAD';
-  const scope=day+'/auto/s3/aws4_request', sts='AWS4-HMAC-SHA256\n'+amz+'\n'+scope+'\n'+await clSha(canon);
-  let k=await clHmac(clTE.encode('AWS4'+c.sk),day); k=await clHmac(k,'auto'); k=await clHmac(k,'s3'); k=await clHmac(k,'aws4_request');
-  return {url:'https://'+host+uri+(qs?'?'+qs:''),headers:{'x-amz-content-sha256':'UNSIGNED-PAYLOAD','x-amz-date':amz,
-    'Authorization':'AWS4-HMAC-SHA256 Credential='+c.ak+'/'+scope+', SignedHeaders=host;x-amz-content-sha256;x-amz-date, Signature='+clHex(await clHmac(k,sts))}};
-}
-const clFetch=async(method,key,query)=>{ const s=await clSign(method,key,query); return fetch(s.url,{method,headers:s.headers}); };
-function clMsg(status,txt){
-  if(status===403) return 'Access denied. Check the Access Key ID, Secret Access Key and that the token has Object Read & Write for this bucket.';
-  if(status===404) return 'Bucket not found. Check the bucket name and Account ID.';
-  if(!status) return 'Cannot reach R2. Check the Account ID, your internet, and that the bucket has the CORS rule for this app address.';
-  return 'Cloud error '+status+(txt?': '+String(txt).replace(/<[^>]+>/g,' ').trim().slice(0,120):'');
-}
-const clErrText=(e,p)=>e instanceof TypeError?((p||clActive())==='gd'?'Cannot reach Google. Check your internet.':clMsg(0)):(e&&e.message||String(e));
-async function r2List(){
-  const out=[]; let tok='';
-  for(let i=0;i<20;i++){
-    const q={'list-type':'2',prefix:'inkdown/'}; if(tok) q['continuation-token']=tok;
-    const r=await clFetch('GET','',q), t=await r.text(); if(!r.ok) throw new Error(clMsg(r.status,t));
-    const x=new DOMParser().parseFromString(t,'application/xml');
-    x.querySelectorAll('Contents').forEach(e=>{
-      const k=e.querySelector('Key').textContent, m=k.match(/^inkdown\/(.*)__(.+)\.inkdown$/); if(!m) return;
-      out.push({key:k,name:m[1],id:m[2],size:+(e.querySelector('Size')||{}).textContent||0,mod:Date.parse((e.querySelector('LastModified')||{}).textContent)||0});
-    });
-    const tr=x.querySelector('IsTruncated'), nx=x.querySelector('NextContinuationToken');
-    tok=(tr&&tr.textContent==='true'&&nx)?nx.textContent:''; if(!tok) break;
-  }
-  return out.sort((a,b)=>b.mod-a.mod);
-}
-async function clPut(key,blob,onp){
-  const s=await clSign('PUT',key);
-  return new Promise((res,rej)=>{ const x=new XMLHttpRequest(); x.open('PUT',s.url); for(const k in s.headers) x.setRequestHeader(k,s.headers[k]);
-    x.upload.onprogress=e=>{ if(e.lengthComputable&&onp) onp(e.loaded/e.total); };
-    x.onload=()=>x.status>=200&&x.status<300?res():rej(new Error(clMsg(x.status,x.responseText)));
-    x.onerror=()=>rej(new Error(clMsg(0))); x.send(blob); });
-}
-async function clGetBlob(key){ const r=await clFetch('GET',key); if(!r.ok) throw new Error(clMsg(r.status,await r.text())); return r.blob(); }
+const clActive=()=>GD&&GD.on?'gd':null;
+const clErrText=e=>e instanceof TypeError?'Cannot reach Google. Check your internet.':(e&&e.message||String(e));
 async function clPutNb(id,nb,blob){
-  await clCfg(); const pv=clActive(); if(!pv) throw new Error('Cloud storage is not set up.');
+  await clCfg(); if(!clActive()) throw new Error('Sign in with Google first.');
   const onp=p=>{ $('st').textContent='Uploading '+nb.name+'… '+Math.round(p*100)+'%'; };
-  if(pv==='gd') return gdPut(id,nb.name,blob,onp);
-  const key='inkdown/'+safeName(nb.name)+'__'+id+'.inkdown';
-  await clPut(key,blob,onp);
-  try{ for(const o of await r2List()) if(o.id===id&&o.key!==key) await clFetch('DELETE',o.key); }catch(_){}   // a renamed notebook replaces its old cloud copy
+  return gdPut(id,nb.name,blob,onp);
 }
 /* ---- Google Drive: sign-in via Google Identity Services, files kept in the hidden appDataFolder (only this app can see them) ---- */
 const GD_SCOPE='https://www.googleapis.com/auth/drive.appdata';
@@ -3580,7 +3530,7 @@ function gdToken(){
   if(GDT.tok&&Date.now()<GDT.exp-60000) return Promise.resolve(GDT.tok);
   return gdLoad().then(()=>new Promise((res,rej)=>{
     const cid=GD_CLIENT_ID||(GD&&GD.clientId); if(!cid) return rej(new Error('Google Client ID is missing.'));
-    const tc=google.accounts.oauth2.initTokenClient({client_id:cid,scope:GD_SCOPE,
+    const tc=google.accounts.oauth2.initTokenClient({client_id:cid,scope:GD_SCOPE,hint:(GD&&GD.email)||undefined,
       callback:r=>{ if(r.error) return rej(new Error(r.error==='access_denied'?'Sign-in was cancelled or access was denied.':'Google sign-in failed: '+r.error)); GDT.tok=r.access_token; GDT.exp=Date.now()+(+r.expires_in||3600)*1000; res(GDT.tok); },
       error_callback:e=>rej(new Error(e&&e.type==='popup_closed'?'The sign-in window was closed.':e&&e.type==='popup_failed_to_open'?'The sign-in popup was blocked. Allow popups for this page and try again.':'Google sign-in failed.'))});
     tc.requestAccessToken({prompt:GD&&GD.on?'':'consent'});
@@ -3616,75 +3566,44 @@ async function gdPut(id,name,blob,onp){
     x.onerror=()=>rej(new Error('Upload failed. Check your internet.')); x.send(blob); });
   for(const o of ex.slice(1)){ try{ await gdApi('https://www.googleapis.com/drive/v3/files/'+o.key,{method:'DELETE'}); }catch(_){} }   // keep exactly one copy per notebook
 }
+async function gdWho(){ try{ const r=await gdApi('https://www.googleapis.com/drive/v3/about?fields='+encodeURIComponent('user(emailAddress)')); if(!r.ok) return ''; const j=await r.json(); return (j.user&&j.user.emailAddress)||''; }catch(_){ return ''; } }
 async function gdGet(fileId){ const r=await gdApi('https://www.googleapis.com/drive/v3/files/'+fileId+'?alt=media'); if(!r.ok) throw new Error(await gdErr(r)); return r.blob(); }
-const clList=()=>clActive()==='gd'?gdList():r2List();
-const clGet=o=>clActive()==='gd'?gdGet(o.key):clGetBlob(o.key);
-async function clDel(o){
-  if(clActive()==='gd'){ const r=await gdApi('https://www.googleapis.com/drive/v3/files/'+o.key,{method:'DELETE'}); if(!r.ok&&r.status!==204) throw new Error(await gdErr(r)); return; }
-  const x=await clFetch('DELETE',o.key); if(!x.ok&&x.status!==204) throw new Error(clMsg(x.status,await x.text()));
-}
+const clList=gdList;
+const clGet=o=>gdGet(o.key);
+async function clDel(o){ const r=await gdApi('https://www.googleapis.com/drive/v3/files/'+o.key,{method:'DELETE'}); if(!r.ok&&r.status!==204) throw new Error(await gdErr(r)); }
 async function clOpen(){
   await clCfg();
   const d=document.createElement('div'); d.id='dlg'; document.body.appendChild(d);
   const close=()=>{ d.remove(); if(!$('home').hidden) homeRender(); };
   const origin=(location.origin&&location.origin!=='null')?location.origin:'';
-  const cors=JSON.stringify([{AllowedOrigins:[origin||'https://YOUR-APP-ADDRESS'],AllowedMethods:['GET','PUT','DELETE','HEAD'],AllowedHeaders:['*'],ExposeHeaders:['ETag'],MaxAgeSeconds:3600}],null,2);
   const say=(t,err)=>{ const m=d.querySelector('.clm'); if(m){ m.textContent=t; m.className='clm'+(err?' err':''); } };
   let items=[];
-  const setup=()=>{
-    const c=CL||{};
-    d.innerHTML='<div class="box ifo clb"><h2>Cloud storage · Cloudflare R2</h2>'+
-      '<p>Back up notebooks to your own free Cloudflare R2 bucket. Your keys stay on this device, and files go straight from your browser to your bucket.</p>'+
-      (origin?'':'<p style="color:#dc2626">This page is not opened from a web address (https://…), so Cloudflare will block it. Open the app from a website to use cloud storage.</p>')+
-      '<details><summary>How to set up (about 5 minutes)</summary><ol style="padding-left:18px;margin:8px 0">'+
-      '<li>Create a free account at dash.cloudflare.com and open <b>R2 Object Storage</b>.</li>'+
-      '<li>Create a bucket with <b>Standard</b> storage.</li>'+
-      '<li>Open the bucket → <b>Settings → CORS Policy</b> and add the rule below.</li>'+
-      '<li>On the R2 overview page open <b>API → Manage API tokens</b> and create a token with <b>Object Read &amp; Write</b> for this bucket only. Copy the Access Key ID and Secret Access Key. The Account ID is also on the R2 overview page.</li></ol>'+
-      '<pre>'+esc(cors)+'</pre><button data-a="copy">Copy CORS rule</button><p style="font-size:12px">Menu names may differ slightly in the Cloudflare dashboard.</p></details>'+
-      '<label>Account ID<input id="clA" autocomplete="off" value="'+esc(c.acct||'')+'"></label>'+
-      '<label>Access Key ID<input id="clK" autocomplete="off" value="'+esc(c.ak||'')+'"></label>'+
-      '<label>Secret Access Key<input id="clS" type="password" autocomplete="off" placeholder="'+(c.sk?'saved — type to replace':'')+'"></label>'+
-      '<label>Bucket name<input id="clB" autocomplete="off" value="'+esc(c.bucket||'')+'"></label>'+
-      '<div class="clm"></div><div class="row"><button data-a="pick">Back</button><button data-a="close">Cancel</button><button data-a="save" class="on">Save &amp; test</button></div></div>';
-  };
   const paint=()=>{
     const L=d.querySelector('#clL'); if(!L) return;
     L.innerHTML=items.length?items.map((o,i)=>'<div class="clr"><div><b>'+esc(o.name)+'</b><small>'+mb(o.size)+' · '+new Date(o.mod).toLocaleDateString()+'</small></div><button data-a="rs" data-i="'+i+'">Restore</button><button data-a="dl" data-i="'+i+'">Download</button><button data-a="rm" data-i="'+i+'">Delete</button></div>').join(''):'<p>No notebooks in the cloud yet. Open a notebook card’s ⋯ menu and choose <b>Upload to cloud</b>.</p>';
   };
   const show=async()=>{
-    d.innerHTML='<div class="box ifo clb"><h2>Cloud storage</h2><p style="margin-top:4px">'+(clActive()==='gd'?'Connected to <b>Google Drive</b> (private app folder)':'Connected to bucket <b>'+esc(CL.bucket)+'</b>')+'</p><div id="clL"><p>Loading…</p></div><div class="clm"></div><div class="row"><button data-a="pick">Switch</button><button data-a="dis">Disconnect</button><button data-a="refresh">Refresh</button><button data-a="close" class="on">Close</button></div></div>';
-    try{ items=await clList(); paint(); }catch(err){ const L=d.querySelector('#clL'); if(L) L.innerHTML=''; say(clErrText(err),1); }
+    d.innerHTML='<div class="box ifo clb"><h2>Google Drive</h2><p style="margin-top:4px">Signed in as <b id="clE">'+esc(GD.email||'your Google account')+'</b></p><div id="clL"><p>Loading…</p></div><div class="clm"></div><div class="row"><button data-a="dis">Sign out</button><button data-a="gsign">Reconnect</button><button data-a="refresh">Refresh</button><button data-a="close" class="on">Close</button></div></div>';
+    try{
+      items=await clList(); paint();
+      if(!GD.email){ const em=await gdWho(); if(em){ GD.email=em; await asTx(['settings'],'readwrite',s=>s.put(GD)); const e=d.querySelector('#clE'); if(e) e.textContent=em; } }
+    }catch(err){ const L=d.querySelector('#clL'); if(L) L.innerHTML=''; say(clErrText(err)+' Tap Reconnect to sign in again.',1); }
   };
   d.addEventListener('pointerdown',e=>{ if(e.target===d) close(); });
   d.addEventListener('click',async e=>{
     const b=e.target.closest('[data-a]'); if(!b) return; const a=b.dataset.a, o=items[+b.dataset.i];
     if(a==='close') close();
     else if(a==='refresh') show();
-    else if(a==='pick') pick();
-    else if(a==='r2'){ if(CL){ await clSetProv('r2'); show(); } else setup(); }
-    else if(a==='gd'){ if(GD&&GD.on){ await clSetProv('gd'); show(); } else gdSetup(); }
     else if(a==='gsign'){
-      const inp=d.querySelector('#clG'), cid=GD_CLIENT_ID||(inp?inp.value.trim():'');
+      const inp=d.querySelector('#clG'), cid=GD_CLIENT_ID||(inp?inp.value.trim():'')||(GD&&GD.clientId)||'';
       if(!cid){ say('Enter the Google Client ID first.',1); return; }
       if(!origin){ say('Open the app from a web address (https://…) to use Google sign-in.',1); return; }
-      const prev=GD; GD={key:'gdrive',clientId:GD_CLIENT_ID?'':cid,on:false}; GDT={}; say('Opening Google sign-in…');
-      try{ await gdToken(); await gdList(); GD.on=true; await asTx(['settings'],'readwrite',s=>s.put(GD)); await clSetProv('gd'); await show(); }
-      catch(err){ GD=prev; say(clErrText(err,'gd'),1); }
+      const prev=GD; GD={key:'gdrive',clientId:GD_CLIENT_ID?'':cid,email:(prev&&prev.email)||'',on:!!(prev&&prev.on)}; GDT={}; say('Opening Google sign-in…');
+      try{ await gdToken(); GD.email=(await gdWho())||GD.email; await gdList(); GD.on=true; await asTx(['settings'],'readwrite',s=>s.put(GD)); await show(); }
+      catch(err){ GD=prev; say(clErrText(err),1); }
     }
-    else if(a==='copy'){ try{ await navigator.clipboard.writeText(cors); b.textContent='Copied ✓'; }catch(_){ b.textContent='Select the text above and copy'; } }
-    else if(a==='dis'){ const r=await asDlg('<div>Disconnect '+(clActive()==='gd'?'Google Drive':'cloud storage')+'? Files already stored there are not deleted.</div>',[{id:'cancel',label:'Cancel'},{id:'ok',label:'Disconnect',on:1}]); if(r.id!=='ok') return;
-      if(clActive()==='gd'){ try{ if(GDT.tok&&window.google) google.accounts.oauth2.revoke(GDT.tok); }catch(_){} await asTx(['settings'],'readwrite',s=>s.delete('gdrive')); GD=null; GDT={}; }
-      else{ await asTx(['settings'],'readwrite',s=>s.delete('cloud')); CL=null; }
-      CP=null; await asTx(['settings'],'readwrite',s=>s.delete('cloudProv')); clActive()?(await clSetProv(clActive()),show()):pick(); }
-    else if(a==='save'){
-      const g=id=>d.querySelector(id).value.trim(), prev=CL||{};
-      const n={key:'cloud',acct:g('#clA').replace(/^https?:\/\//,'').split('.')[0],ak:g('#clK'),sk:g('#clS')||prev.sk||'',bucket:g('#clB')};
-      if(!n.acct||!n.ak||!n.sk||!n.bucket){ say('Fill in all four fields.',1); return; }
-      say('Testing connection…'); CL=n;
-      try{ const r=await clFetch('GET','',{'list-type':'2','max-keys':'1'}), t=await r.text(); if(!r.ok) throw new Error(clMsg(r.status,t)); await asTx(['settings'],'readwrite',s=>s.put(n)); await clSetProv('r2'); await show(); }
-      catch(err){ CL=prev.acct?prev:null; say(clErrText(err,'r2'),1); }
-    }
+    else if(a==='dis'){ const r=await asDlg('<div>Sign out of Google Drive? Files already stored there are not deleted.</div>',[{id:'cancel',label:'Cancel'},{id:'ok',label:'Sign out',on:1}]); if(r.id!=='ok') return;
+      try{ if(GDT.tok&&window.google) google.accounts.oauth2.revoke(GDT.tok); }catch(_){} await asTx(['settings'],'readwrite',s=>s.delete('gdrive')); GD=null; GDT={}; gdSetup(); }
     else if(a==='dl'&&o){ say('Downloading…'); try{ dlBlob(await clGet(o),safeName(o.name)+'.inkdown'); say('Downloaded.'); }catch(err){ say(clErrText(err),1); } }
     else if(a==='rm'&&o){ const r=await asDlg('<div>Delete “'+esc(o.name)+'” from the cloud? This cannot be undone.</div>',[{id:'cancel',label:'Cancel'},{id:'ok',label:'Delete',on:1,red:1}]); if(r.id!=='ok') return; try{ await clDel(o); items=items.filter(i=>i!==o); paint(); say('Deleted.'); }catch(err){ say(clErrText(err),1); } }
     else if(a==='rs'&&o){
@@ -3693,21 +3612,15 @@ async function clOpen(){
       try{ await asOpenAny(new File([await clGet(o)],safeName(o.name)+'.inkdown')); }catch(err){ $('st').textContent='Restore failed: '+clErrText(err); if(!$('home').hidden) homeRender(); }
     }
   });
-  const pick=()=>{
-    d.innerHTML='<div class="box ifo clb"><h2>Cloud storage</h2><p>Choose where to back up your notebooks.</p>'+
-      '<div class="clr"><div><b>Google Drive</b><small>15 GB free (shared with Gmail &amp; Photos) · just sign in</small></div><button data-a="gd">'+(GD&&GD.on?'Use':'Set up')+'</button></div>'+
-      '<div class="clr"><div><b>Cloudflare R2</b><small>10 GB free · needs your own bucket</small></div><button data-a="r2">'+(CL?'Use':'Set up')+'</button></div>'+
-      '<div class="row"><button data-a="close" class="on">Close</button></div></div>';
-  };
   const gdSetup=()=>{
     gdLoad().catch(()=>{});
-    d.innerHTML='<div class="box ifo clb"><h2>Google Drive</h2><p>Sign in to back up notebooks to a private, hidden app folder in your Google Drive. Only this app can see these files, and they use your Drive storage.</p>'+
+    d.innerHTML='<div class="box ifo clb"><h2>Back up with Google Drive</h2><p>Sign in with your Gmail / Google account to back up notebooks to a private, hidden app folder in your Google Drive. Only this app can see these files, and they use your own Drive storage.</p>'+
       (origin?'':'<p style="color:#dc2626">This page is not opened from a web address (https://…), so Google sign-in will not work.</p>')+
       (GD_CLIENT_ID?'':'<label>Google OAuth Client ID<input id="clG" autocomplete="off" placeholder="1234-abc.apps.googleusercontent.com" value="'+esc((GD&&GD.clientId)||'')+'"></label>')+
-      '<div class="clm"></div><div class="row"><button data-a="pick">Back</button><button data-a="gsign" class="on">Sign in with Google</button></div></div>';
+      '<div class="clm"></div><div class="row"><button data-a="close">Cancel</button><button data-a="gsign" class="on">Sign in with Google</button></div></div>';
   };
   if(GD&&GD.on) gdLoad().catch(()=>{});
-  clActive()?show():pick();
+  clActive()?show():gdSetup();
 }
 async function homeRender(){
   const h=$('home');
