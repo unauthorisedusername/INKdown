@@ -523,6 +523,21 @@ body.pgSideOn #pgSide{display:flex}
 #dlg .clb .clr b{display:block;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;font-size:13px}
 #dlg .clb .clr small{font-size:11px;color:var(--tb-mut)}
 #dlg .clb .clr button{padding:4px 8px;font-size:12px}
+/* glass theme for the cloud popup */
+#dlg:has(.clb){background:rgba(10,12,24,.22);-webkit-backdrop-filter:blur(5px);backdrop-filter:blur(5px)}
+#dlg .box.clb{position:relative;border-radius:26px;padding:20px 22px;border:1px solid var(--gl-bd);
+  background:radial-gradient(120% 140% at 0% 0%,rgba(255,255,255,.2),transparent 55%),radial-gradient(100% 120% at 100% 100%,color-mix(in srgb,var(--ac) 10%,transparent),transparent 60%),linear-gradient(135deg,var(--gl-a),var(--gl-b));
+  -webkit-backdrop-filter:blur(22px) saturate(190%);backdrop-filter:blur(22px) saturate(190%);
+  box-shadow:0 0 0 1px var(--gl-bd),inset 0 1px 0 var(--gl-in),0 24px 60px var(--gl-sh);animation:menuIn .2s cubic-bezier(.2,.9,.3,1.2)}
+#dlg .clb h2{font-size:17px;font-weight:700}
+#dlg .clb input{background:var(--pm-well,rgba(255,255,255,.4));border:1px solid var(--gl-bd);border-radius:14px;padding:10px 12px;outline:none;color:var(--fg)}
+#dlg .clb input:focus{box-shadow:0 0 0 2px var(--ac)}
+#dlg .clb button{background:transparent;color:var(--fg);border:1px solid var(--gl-bd);border-radius:999px;padding:8px 14px;font-weight:600;-webkit-backdrop-filter:blur(8px);backdrop-filter:blur(8px);transition:background .15s,transform .12s}
+#dlg .clb button:hover{background:var(--tb-hov)}
+#dlg .clb button:active{transform:scale(.97)}
+#dlg .clb button.on{background:var(--ac);border-color:var(--ac);color:#fff}
+#dlg .clb .clr{border-top:1px solid var(--gl-bd)}
+#dlg .clb .clr button{padding:5px 11px;font-size:12px}
 #home,#home *{-webkit-tap-highlight-color:transparent}
 #home .card,#home .card *{-webkit-user-select:none;user-select:none;-webkit-touch-callout:none}
 #home .card:focus,#home .card:focus-visible,#home .card *:focus,#home .card *:focus-visible{outline:none}
