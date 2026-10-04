@@ -538,6 +538,31 @@ body.pgSideOn #pgSide{display:flex}
 #dlg .clb button.on{background:var(--ac);border-color:var(--ac);color:#fff}
 #dlg .clb .clr{border-top:1px solid var(--gl-bd)}
 #dlg .clb .clr button{padding:5px 11px;font-size:12px}
+#dlg .clb .clh{display:flex;align-items:center;gap:10px}
+#dlg .clb .clh h2{flex:1}
+#dlg .clb .cld{display:flex;align-items:center;justify-content:center;width:36px;height:36px;border-radius:12px;background:var(--pm-well,rgba(255,255,255,.4));border:1px solid var(--gl-bd);color:var(--ac)}
+#dlg .clb .clx{width:34px;height:34px;padding:0;display:flex;align-items:center;justify-content:center;font-size:14px}
+#dlg .clb .cla{display:flex;align-items:center;gap:10px;margin-top:14px;padding:10px 12px;border-radius:18px;background:var(--pm-well,rgba(255,255,255,.4));border:1px solid var(--gl-bd);flex-wrap:wrap}
+#dlg .clb .cla>div:nth-child(2){flex:1;min-width:0}
+#dlg .clb .cla b{display:block;font-size:13px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+#dlg .clb .cla small{display:flex;align-items:center;gap:5px;font-size:11px;color:var(--tb-mut)}
+#dlg .clb .cldot{width:7px;height:7px;border-radius:50%;background:#22c55e;box-shadow:0 0 6px #22c55e}
+#dlg .clb .clav{width:36px;height:36px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-weight:700;color:#fff;background:linear-gradient(135deg,var(--ac),#a855f7)}
+#dlg .clb .clal{display:flex;gap:6px;width:100%;justify-content:flex-end}
+#dlg .clb .clal button{padding:4px 10px;font-size:12px}
+#dlg .clb .clt{display:flex;align-items:center;justify-content:space-between;margin-top:16px;font-size:12px;font-weight:600;letter-spacing:.4px;text-transform:uppercase;color:var(--tb-mut)}
+#dlg .clb .clrf{width:30px;height:30px;padding:0;display:flex;align-items:center;justify-content:center;font-size:15px}
+#dlg .clb #clL{min-height:170px;margin-top:6px}
+#dlg .clb .clr{position:relative;gap:10px;padding:10px 0}
+#dlg .clb .cli{display:flex;align-items:center;justify-content:center;width:38px;height:38px;border-radius:12px;background:var(--pm-well,rgba(255,255,255,.4));border:1px solid var(--gl-bd);color:var(--ac);flex:none}
+#dlg .clb .clmn{width:34px;height:34px;padding:0;font-size:18px;line-height:1;display:flex;align-items:center;justify-content:center}
+#dlg .clb .clmenu{position:absolute;right:0;top:calc(100% - 6px);z-index:5;display:flex;flex-direction:column;gap:2px;min-width:140px;padding:6px;border-radius:16px;border:1px solid var(--gl-bd);background:var(--gl-pop);-webkit-backdrop-filter:blur(26px) saturate(180%);backdrop-filter:blur(26px) saturate(180%);box-shadow:0 14px 34px var(--gl-sh),inset 0 1px 0 var(--gl-in)}
+#dlg .clb .clmenu[hidden]{display:none}
+#dlg .clb .clmenu button{border:0;border-radius:11px;text-align:left;padding:9px 12px;font-size:13px;-webkit-backdrop-filter:none;backdrop-filter:none}
+#dlg .clb .clmenu button.red{color:#dc2626}
+#dlg .clb .cle{display:flex;flex-direction:column;align-items:center;text-align:center;padding:26px 8px;gap:6px}
+#dlg .clb .cle .cli{width:52px;height:52px}
+#dlg .clb .cle p{margin:0;color:var(--tb-mut)}
 #home,#home *{-webkit-tap-highlight-color:transparent}
 #home .card,#home .card *{-webkit-user-select:none;user-select:none;-webkit-touch-callout:none}
 #home .card:focus,#home .card:focus-visible,#home .card *:focus,#home .card *:focus-visible{outline:none}
@@ -3595,18 +3620,27 @@ async function clOpen(){
   let items=[];
   const paint=()=>{
     const L=d.querySelector('#clL'); if(!L) return;
-    L.innerHTML=items.length?items.map((o,i)=>'<div class="clr"><div><b>'+esc(o.name)+'</b><small>'+mb(o.size)+' · '+new Date(o.mod).toLocaleDateString()+'</small></div><button data-a="rs" data-i="'+i+'">Restore</button><button data-a="dl" data-i="'+i+'">Download</button><button data-a="rm" data-i="'+i+'">Delete</button></div>').join(''):'<p>No notebooks in the cloud yet. Open a notebook card’s ⋯ menu and choose <b>Upload to cloud</b>.</p>';
+    const sz=n=>n<1048576?Math.max(1,Math.round(n/1024))+' KB':(n/1048576).toFixed(1)+' MB';
+    const ico='<svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M6 3h11a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2H6z"/><path d="M6 3v18M10 8h5M10 12h5"/></svg>';
+    L.innerHTML=items.length?items.map((o,i)=>'<div class="clr"><span class="cli">'+ico+'</span><div><b>'+esc(o.name)+'</b><small>Backed up '+new Date(o.mod).toLocaleDateString(undefined,{day:'numeric',month:'short'})+' · '+sz(o.size)+'</small></div><button class="clmn" data-a="mn" data-i="'+i+'" aria-label="More">⋯</button><div class="clmenu" hidden><button data-a="rs" data-i="'+i+'">Restore</button><button data-a="dl" data-i="'+i+'">Download</button><button data-a="rm" data-i="'+i+'" class="red">Delete</button></div></div>').join(''):'<div class="cle"><span class="cli">'+ico+'</span><b>No backups yet</b><p>Open a notebook card’s ⋯ menu and choose <b>Upload to cloud</b>.</p></div>';
   };
   const show=async()=>{
-    d.innerHTML='<div class="box ifo clb"><h2>Google Drive</h2><p style="margin-top:4px">Signed in as <b id="clE">'+esc(GD.email||'your Google account')+'</b></p><div id="clL"><p>Loading…</p></div><div class="clm"></div><div class="row"><button data-a="dis">Sign out</button><button data-a="gsign">Reconnect</button><button data-a="refresh">Refresh</button><button data-a="close" class="on">Close</button></div></div>';
+    const em0=GD.email||'';
+    d.innerHTML='<div class="box ifo clb"><div class="clh"><span class="cld"><svg viewBox="0 0 24 24" width="22" height="22" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linejoin="round"><path d="M8 3h8l6 10.5-4 7H6l-4-7z"/><path d="M8 3l6 10.5M16 3L10 13.5M2 13.5h12"/></svg></span><h2>Google Drive</h2><button class="clx" data-a="close" aria-label="Close">✕</button></div>'+
+      '<div class="cla"><span class="clav" id="clA">'+esc((em0||'G').charAt(0).toUpperCase())+'</span><div><b id="clE">'+esc(em0||'Google account')+'</b><small><i class="cldot"></i>Connected</small></div><div class="clal"><button data-a="gsign">Reconnect</button><button data-a="dis">Sign out</button></div></div>'+
+      '<div class="clt"><span>Your backups</span><button class="clrf" data-a="refresh" aria-label="Refresh">↻</button></div>'+
+      '<div id="clL"><p>Loading…</p></div><div class="clm"></div></div>';
     try{
       items=await clList(); paint();
-      if(!GD.email){ const em=await gdWho(); if(em){ GD.email=em; await asTx(['settings'],'readwrite',s=>s.put(GD)); const e=d.querySelector('#clE'); if(e) e.textContent=em; } }
+      if(!GD.email){ const em=await gdWho(); if(em){ GD.email=em; await asTx(['settings'],'readwrite',s=>s.put(GD)); const e=d.querySelector('#clE'); if(e) e.textContent=em; const av=d.querySelector('#clA'); if(av) av.textContent=em.charAt(0).toUpperCase(); } }
     }catch(err){ const L=d.querySelector('#clL'); if(L) L.innerHTML=''; say(clErrText(err)+' Tap Reconnect to sign in again.',1); }
   };
   d.addEventListener('pointerdown',e=>{ if(e.target===d) close(); });
   d.addEventListener('click',async e=>{
-    const b=e.target.closest('[data-a]'); if(!b) return; const a=b.dataset.a, o=items[+b.dataset.i];
+    const b=e.target.closest('[data-a]');
+    if(!b||b.dataset.a!=='mn') d.querySelectorAll('.clmenu').forEach(m=>m.hidden=true);
+    if(!b) return; const a=b.dataset.a, o=items[+b.dataset.i];
+    if(a==='mn'){ const m=b.nextElementSibling, open=m.hidden; d.querySelectorAll('.clmenu').forEach(x=>x.hidden=true); m.hidden=!open; return; }
     if(a==='close') close();
     else if(a==='refresh') show();
     else if(a==='gsign'){
