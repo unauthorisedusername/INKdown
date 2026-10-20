@@ -84,7 +84,7 @@ Insert pictures into any page, then resize, move and rotate them. Combine them w
 - Your notes are **stored on your device**, with autosave.
 - **Download a backup** of any notebook and restore it later.
 - **Cloud backup** with clear status badges: backed up, out of date, or not backed up.
-- A **storage meter** shows how much space you are using.
+- A **storage metre** shows how much space you are using.
 
 ## A Native-App Feel
 
@@ -107,4 +107,7 @@ Insert pictures into any page, then resize, move and rotate them. Combine them w
 
 ---
 
+Many more features will be added one after another. Stay tuned.
+
 *INKdown 🪶: your notes, your ink, your way.*
+Made by student, for students.
